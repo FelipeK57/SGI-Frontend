@@ -7,7 +7,11 @@ export default {
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#0c0bc0",
+      },
+    },
   },
   plugins: [heroui()],
 };
