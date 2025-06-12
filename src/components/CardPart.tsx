@@ -23,25 +23,24 @@ export const CardPart = ({ part }: CardPartProps) => {
   }
 
   return (
-    <Link to={`${part.id}`} className="flex flex-col gap-1 w-full rounded-md group">
-      <div className="w-full aspect-square bg-zinc-100 rounded-md overflow-hidden ">
+    <Link
+      to={`${part.id}`}
+      className="flex flex-col gap-1 w-full rounded-md group"
+    >
+      <div className="w-full aspect-square bg-white rounded-md overflow-hidden ">
         {part.image ? (
           <img
             src={part.image}
             alt={part.name}
-            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-110 p-2 transition-transform duration-300"
           />
         ) : (
           <DefaultPhoto />
         )}
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <p className="text-base font-semibold line-clamp-2 min-h-7 max-h-14">
-          {part.name}
-        </p>
-        <p className="text-xs font-medium text-zinc-700 truncate">
-          {part.partNumber}
-        </p>
+        <p className="text-base line-clamp-2 min-h-7 max-h-14">{part.name}</p>
+        <p className="text-xs text-zinc-700 truncate">{part.partNumber}</p>
         <p className="text-xs text-zinc-500 line-clamp-3">{part.description}</p>
       </div>
     </Link>

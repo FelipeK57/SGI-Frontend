@@ -10,3 +10,13 @@ export const fetchParts = async () => {
     throw error;
   }
 };
+
+export const fetchPart = async (partId: string) => {
+  try {
+    const response = await axios.get(`${ENDPOINT.PARTS}/${partId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching part:", error);
+    throw error;
+  }
+};

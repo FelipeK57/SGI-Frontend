@@ -1,8 +1,8 @@
 import { Button, Input } from "@heroui/react";
-import { CardPart } from "../components/CardPart";
+import { CardPart } from "../../components/CardPart";
 import { useEffect, useState } from "react";
-import type { Part } from "../Clases";
-import { fetchParts } from "../services/partService";
+import type { Part } from "../../Clases";
+import { fetchParts } from "../../services/partService";
 
 export const Parts = () => {
   const [parts, setParts] = useState<Part[]>([]);
