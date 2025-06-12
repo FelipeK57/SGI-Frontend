@@ -2,15 +2,25 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { App } from './App.tsx'
-import { HeroUIProvider } from "@heroui/react";
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router';
+// @ts-ignore
+import "@fontsource-variable/inter"
+import { Parts } from './pages/Parts.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <HeroUIProvider>
+        <ToastProvider placement='top-center' />
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/dashboard" element={<App />}>
+            <Route index element={<Navigate to="parts" replace />} />
+            <Route index path="parts" element={<Parts />} />
+            <Route path="parts/:partId" element={<h1 className='text-center text-2xl'>Part Details Page</h1>} />
+            <Route path="client-quotes" element={<h1 className='text-center text-2xl'>Client Quotes Page</h1>} />
+          </Route>
+          <Route path='*' element={<h1 className='text-center text-2xl'>Page not found</h1>} />
         </Routes>
       </HeroUIProvider>
     </BrowserRouter>
