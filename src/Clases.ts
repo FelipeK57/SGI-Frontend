@@ -1,3 +1,11 @@
+export interface User {
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+  role: "services" | "auxiliary" | "admin";
+}
+
 export interface Part {
   id: number;
   name: string;

@@ -3,9 +3,11 @@ import { CardPart } from "../../components/CardPart";
 import { useEffect, useState } from "react";
 import type { Part } from "../../Clases";
 import { fetchParts } from "../../services/partService";
+import { useAuth } from "../../store/useAuth";
 
 export const Parts = () => {
   const [parts, setParts] = useState<Part[]>([]);
+  const { role } = useAuth();
 
   useEffect(() => {
     const fetchPartsData = async () => {
@@ -23,11 +25,13 @@ export const Parts = () => {
     <div className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between w-full">
         <h1 className="text-xl font-semibold">Catálogo de partes</h1>
-        <div className="block sm:hidden">
-          <Button isIconOnly color="primary">
-            <PlusIcon />
-          </Button>
-        </div>
+        {(role === "admin" || role === "auxiliary") && (
+          <div className="block sm:hidden">
+            <Button isIconOnly color="primary">
+              <PlusIcon />
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex justify-between items-center gap-2">
         <Input
@@ -37,9 +41,11 @@ export const Parts = () => {
           placeholder="Buscar"
           variant="bordered"
         />
-        <div className="hidden sm:block">
-          <Button color="primary">Registrar nueva parte</Button>
-        </div>
+        {(role === "admin" || role === "auxiliary") && (
+          <div className="hidden sm:block">
+            <Button color="primary">Registrar nueva parte</Button>
+          </div>
+        )}
       </div>
       <main
         className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-5 overflow-y-auto w-full
@@ -50,7 +56,7 @@ export const Parts = () => {
             return <CardPart part={part} key={part.id} />;
           })
         ) : (
-          <div className="col-span-2 flex items-center justify-center">
+          <div className="col-span-full flex items-center justify-center">
             <p className="text-zinc-500 text-sm font-light">
               No hay partes disponibles
             </p>

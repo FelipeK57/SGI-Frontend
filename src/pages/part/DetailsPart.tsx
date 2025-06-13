@@ -3,11 +3,13 @@ import { useLocation, useNavigate } from "react-router";
 import type { Part } from "../../Clases";
 import { fetchPart } from "../../services/partService";
 import { Button, Tab, Tabs } from "@heroui/react";
+import { useAuth } from "../../store/useAuth";
 
 export const DetailsPart = () => {
   const [part, setPart] = useState<Part | null>(null);
   const navigate = useNavigate();
   const partId = useLocation().pathname.split("/").pop();
+  const { role } = useAuth();
 
   useEffect(() => {
     const fetchPartData = async () => {
@@ -32,14 +34,16 @@ export const DetailsPart = () => {
         >
           <ArrowLeftIcon />
         </Button>
-        <Button isIconOnly color="primary" variant="bordered">
-          <PencilIcon />
-        </Button>
+        {(role === "admin" || role === "auxiliary") && (
+          <Button isIconOnly color="primary" variant="bordered">
+            <PencilIcon />
+          </Button>
+        )}
       </div>
       <Tabs
         classNames={{
           panel: "h-full overflow-y-auto p-0",
-          tabList: "p-0",
+          tabList: "p-0 w-full",
         }}
         color="primary"
         variant="light"
