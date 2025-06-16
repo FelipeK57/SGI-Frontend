@@ -73,9 +73,12 @@ export const NewPart = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col gap-2 w-full">
           <Input onChange={handleImageChange} isRequired type="file" name="partImage" label="Imagen" placeholder="Selecciona una imagen" labelPlacement="outside" variant="bordered" />
-          <img src={imagePreview || ""} alt="image preview" className="hidden sm:block w-full aspect-square bg-white object-contain p-2 rounded-md" />
+          <div className="flex flex-col gap-1">
+            <span className="text-xs hidden sm:block">Vista previa</span>
+            <img src={imagePreview || "/default.png"} alt="Vista previa" className="hidden sm:block w-full aspect-square bg-white object-contain p-2 rounded-md" />
+          </div>
         </div>
         <div className="block md:hidden w-full">
           <Button isLoading={isLoading} type="submit" color="primary" className="w-full">
