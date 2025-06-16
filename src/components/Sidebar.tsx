@@ -7,7 +7,10 @@ import {
   Button,
   useDisclosure,
 } from "@heroui/react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "../store/useAuth";
+
+export const serviceRoleRoutes = [{ name: "Partes", path: "parts" }];
 
 export const routes = [
   { name: "Partes", path: "parts" },
@@ -23,6 +26,8 @@ export const selectedRouteStyle = (path: string) => {
 };
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+  const { role } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -42,26 +47,50 @@ export const Sidebar = () => {
               </DrawerHeader>
               <DrawerBody>
                 <ul className="flex flex-col gap-3">
-                  {routes.map((route) => {
-                    return (
-                      <Link
-                        className={`text-base ${selectedRouteStyle(
-                          route.path
-                        )}`}
-                        to={route.path}
-                        key={route.name}
-                        onClick={() => {
-                          onOpenChange();
-                        }}
-                      >
-                        {route.name}
-                      </Link>
-                    );
-                  })}
+                  {role === "services"
+                    ? serviceRoleRoutes.map((route) => {
+                        return (
+                          <Link
+                            className={`text-base ${selectedRouteStyle(
+                              route.path
+                            )}`}
+                            to={route.path}
+                            key={route.name}
+                            onClick={() => {
+                              onOpenChange();
+                            }}
+                          >
+                            {route.name}
+                          </Link>
+                        );
+                      })
+                    : routes.map((route) => {
+                        return (
+                          <Link
+                            className={`text-base ${selectedRouteStyle(
+                              route.path
+                            )}`}
+                            to={route.path}
+                            key={route.name}
+                            onClick={() => {
+                              onOpenChange();
+                            }}
+                          >
+                            {route.name}
+                          </Link>
+                        );
+                      })}
                 </ul>
               </DrawerBody>
               <DrawerFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={() => {
+                    navigate("/");
+                    onClose();
+                  }}
+                >
                   Cerrar sesión
                 </Button>
               </DrawerFooter>
