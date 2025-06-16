@@ -40,43 +40,70 @@ export const DetailsPart = () => {
           </Button>
         )}
       </div>
-      <Tabs
-        classNames={{
-          panel: "h-full overflow-y-auto p-0",
-          tabList: "p-0 w-full",
-        }}
-        color="primary"
-        variant="light"
-        aria-label="Options"
-      >
-        <Tab key="details" title="Detalles de parte">
-          <DetailPart part={part} />
-        </Tab>
-        <Tab key="stock" title="Unidades">
-          <p>Unidades</p>
-        </Tab>
-        <Tab key="output-history" title="Historial de salidas">
-          <p>Historial de salidas</p>
-        </Tab>
-        <Tab key="pending-input" title="Pendientes de ingreso">
-          <p>Pendientes de ingreso</p>
-        </Tab>
-      </Tabs>
+      <div className="hidden md:flex flex-col gap-2">
+        <DetailPart part={part} />
+      </div>
+      <div className="flex flex-col gap-2 h-full md:hidden">
+        <Tabs
+          classNames={{
+            panel: "h-full overflow-y-auto p-0",
+            tabList: "p-0 w-full",
+          }}
+          color="primary"
+          variant="light"
+          aria-label="Options"
+        >
+          <Tab key="details" title="Detalles de parte">
+            <DetailPart part={part} />
+          </Tab>
+          <Tab key="stock" title="Unidades">
+            <p>Unidades</p>
+          </Tab>
+          <Tab key="output-history" title="Historial de salidas">
+            <p>Historial de salidas</p>
+          </Tab>
+          <Tab key="pending-input" title="Pendientes de ingreso">
+            <p>Pendientes de ingreso</p>
+          </Tab>
+        </Tabs>
+      </div>
+      <div className="md:flex flex-col gap-2 h-full hidden">
+        <Tabs
+          classNames={{
+            panel: "h-full overflow-y-auto p-0",
+            tabList: "p-0 w-full",
+          }}
+          color="primary"
+          variant="light"
+          aria-label="Options"
+        >
+          <Tab key="stock" title="Unidades">
+            <p>Unidades</p>
+          </Tab>
+          <Tab key="output-history" title="Historial de salidas">
+            <p>Historial de salidas</p>
+          </Tab>
+          <Tab key="pending-input" title="Pendientes de ingreso">
+            <p>Pendientes de ingreso</p>
+          </Tab>
+        </Tabs>
+      </div>
     </main>
   );
 };
 
 export const DetailPart = ({ part }: { part: Part }) => {
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-xl">{part.name}</h2>
+    <div className="flex flex-col md:flex-row gap-2 md:gap-5">
+      <h2 className="text-xl md:hidden">{part.name}</h2>
       <img
         src={part.image}
         alt={part.name}
         className="w-full aspect-square bg-white object-contain p-2
-         rounded-md"
+         rounded-md md:w-1/4 md:max-w-xs"
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col md:gap-2 max-w-sm">
+        <h2 className="text-xl hidden md:block">{part.name}</h2>
         <p className="text-sm text-zinc-950">
           Número de parte:{" "}
           <span className="text-sm  text-zinc-700">{part.partNumber}</span>
@@ -119,7 +146,7 @@ export const ArrowLeftIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={1.5}
+      strokeWidth={3}
       stroke="currentColor"
       className="size-6"
     >

@@ -38,10 +38,12 @@ export const CardPart = ({ part }: CardPartProps) => {
           <DefaultPhoto />
         )}
       </div>
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-1 w-full">
         <p className="text-base line-clamp-2 min-h-7 max-h-14">{part.name}</p>
         <p className="text-xs text-zinc-700 truncate">{part.partNumber}</p>
-        <p className="text-xs text-zinc-500 line-clamp-3">{part.description}</p>
+        <p className="text-sm text-zinc-900 truncate">{part.producer}</p>
+        {/* Uncomment the line below if you want to display the description */}
+        {/* <p className="text-xs text-zinc-500 line-clamp-3">{part.description}</p> */}
       </div>
     </Link>
   );

@@ -14,7 +14,7 @@ export const SidebarDesktop = () => {
         {role === "services"
           ? serviceRoleRoutes.map((route) => (
               <Link
-                className={`xl:text-sm 2xl:text-lg py-2 px-5 hover:text-primary transition-colors ${selectedRouteStyle(
+                className={`lg:text-sm 2xl:text-lg py-2 px-5 hover:text-primary transition-colors ${selectedRouteStyle(
                   route.path
                 )}`}
                 to={route.path}
@@ -25,7 +25,7 @@ export const SidebarDesktop = () => {
             ))
           : routes.map((route) => (
               <Link
-                className={`xl:text-sm 2xl:text-lg py-2 px-5 hover:text-primary transition-colors ${selectedRouteStyle(
+                className={`xl:text-sm 2xl:text-base py-2 px-5 hover:text-primary transition-colors ${selectedRouteStyle(
                   route.path
                 )}`}
                 to={route.path}
@@ -35,12 +35,13 @@ export const SidebarDesktop = () => {
               </Link>
             ))}
       </div>
-      <div className="flex justify-between items-center mt-auto">
+      <div className="flex items-center mt-auto">
         <User
+        
           classNames={{
-            name: "text-xs",
+            name: "text-xs max-w-[150px] truncate",
           }}
-          className="justify-start"
+          className="flex flex-grow justify-start"
           avatarProps={{
             src: `https://ui-avatars.com/api/?name=${user?.name}+${user?.lastName}&?background=random`,
           }}

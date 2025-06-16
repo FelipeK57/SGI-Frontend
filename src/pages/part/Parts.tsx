@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import type { Part } from "../../Clases";
 import { fetchParts } from "../../services/partService";
 import { useAuth } from "../../store/useAuth";
+import { useNavigate } from "react-router";
 
 export const Parts = () => {
   const [parts, setParts] = useState<Part[]>([]);
   const { role } = useAuth();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchPartsData = async () => {
@@ -27,7 +29,7 @@ export const Parts = () => {
         <h1 className="text-xl font-semibold">Catálogo de partes</h1>
         {(role === "admin" || role === "auxiliary") && (
           <div className="block sm:hidden">
-            <Button isIconOnly color="primary">
+            <Button onPress={() => navigate("new")} isIconOnly color="primary">
               <PlusIcon />
             </Button>
           </div>
@@ -43,7 +45,7 @@ export const Parts = () => {
         />
         {(role === "admin" || role === "auxiliary") && (
           <div className="hidden sm:block">
-            <Button color="primary">Registrar nueva parte</Button>
+            <Button onPress={() => navigate("new")} color="primary">Registrar nueva parte</Button>
           </div>
         )}
       </div>
