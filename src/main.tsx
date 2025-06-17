@@ -10,6 +10,7 @@ import { Parts } from "./pages/part/Parts.tsx";
 import { DetailsPart } from "./pages/part/DetailsPart.tsx";
 import { Login } from "./pages/auth/Login.tsx";
 import { NewPart } from "./pages/part/NewPart.tsx";
+import { EditPart } from "./pages/part/EditPart.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
             <Route index element={<Navigate to="parts" replace />} />
             <Route index path="parts" element={<Parts />} />
             <Route path="parts/new" element={<NewPart />} />
+            <Route path="parts/:partId/edit" element={<EditPart />} />
             <Route path="parts/:partId" element={<DetailsPart />} />
             <Route
               path="client-quotes"

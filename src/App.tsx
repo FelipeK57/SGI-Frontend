@@ -9,7 +9,7 @@ export const App = () => {
         <Sidebar />
       </nav>
       <SidebarDesktop />
-      <main className="overflow-y-auto w-full px-7 py-2 md:py-5">
+      <main className="overflow-y-hidden w-full px-7 py-2 md:py-5">
         <Outlet />
       </main>
     </main>

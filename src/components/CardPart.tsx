@@ -27,7 +27,7 @@ export const CardPart = ({ part }: CardPartProps) => {
       to={`${part.id}`}
       className="flex flex-col gap-1 w-full rounded-md group"
     >
-      <div className="w-full aspect-square bg-white rounded-md overflow-hidden ">
+      <div className="w-full aspect-square bg-zinc-50 rounded-md overflow-hidden ">
         {part.image ? (
           <img
             src={part.image}
@@ -39,9 +39,9 @@ export const CardPart = ({ part }: CardPartProps) => {
         )}
       </div>
       <div className="flex flex-col gap-1 w-full">
-        <p className="text-base line-clamp-2 min-h-7 max-h-14">{part.name}</p>
+        <p className="text-sm line-clamp-2 min-h-7 max-h-14">{part.name}</p>
         <p className="text-xs text-zinc-700 truncate">{part.partNumber}</p>
-        <p className="text-sm text-zinc-900 truncate">{part.producer}</p>
+        <p className="text-xs text-zinc-900 truncate">{part.producer}</p>
         {/* Uncomment the line below if you want to display the description */}
         {/* <p className="text-xs text-zinc-500 line-clamp-3">{part.description}</p> */}
       </div>

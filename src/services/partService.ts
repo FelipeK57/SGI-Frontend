@@ -22,17 +22,25 @@ export const fetchPart = async (partId: string) => {
 };
 
 export const createPart = async (partData: any) => {
-  console.error("Creating part with data:", partData);
   try {
     const response = await axios.post(ENDPOINT.PARTS, partData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Part created successfully:", response.data);
     return response;
   } catch (error) {
     console.error("Error creating part:", error);
+    throw error;
+  }
+};
+
+export const outputsParts = async (partId: number) => {
+  try {
+    const response = await axios.get(`${ENDPOINT.OUTPUT}/${partId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching output parts:", error);
     throw error;
   }
 };

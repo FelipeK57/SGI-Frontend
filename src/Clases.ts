@@ -16,3 +16,18 @@ export interface Part {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Client {
+  name: string;
+}
+
+export interface Output {
+  type: string;
+  client: Client;
+}
+
+export interface OutputPart {
+  serial: string;
+  createdAt: string;
+  output: Output;
+}
