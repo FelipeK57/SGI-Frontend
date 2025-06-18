@@ -18,7 +18,11 @@ export interface Part {
 }
 
 export interface Client {
+  id?: number;
   name: string;
+  company?: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface Output {

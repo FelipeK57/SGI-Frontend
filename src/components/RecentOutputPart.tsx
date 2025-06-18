@@ -27,7 +27,7 @@ export const RecentOutputPart = ({ outputPart }: RecentOutputPartProps) => {
     }
   }
   return (
-    <div className="grid grid-cols-3 md:grid-cols-4 gap-1 w-full border-b-1 p-2 text-xs border-zinc-200">
+    <div className="grid grid-cols-3 md:grid-cols-4 gap-3 w-full border-b-1 p-2 text-xs border-zinc-200">
       <p>{outputPart.serial || "-"}</p>
       <p className="hidden md:block">{formatDate() || "-"}</p>
       <p>{outputPart.output.client.name || "Sin cliente"}</p>

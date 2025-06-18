@@ -22,7 +22,7 @@ export const DetailsPart = () => {
     const fetchOutputPartData = async () => {
       const partData = await outputsParts(Number(partId));
       setOutputs(partData.outputs);
-    }
+    };
 
     fetchOutputPartData();
     fetchPartData();
@@ -44,7 +44,12 @@ export const DetailsPart = () => {
           <ArrowLeftIcon />
         </Button>
         {(role === "admin" || role === "auxiliary") && (
-          <Button onPress={() => navigate("edit")} isIconOnly color="primary" variant="bordered">
+          <Button
+            onPress={() => navigate("edit")}
+            isIconOnly
+            color="primary"
+            variant="bordered"
+          >
             <PencilIcon />
           </Button>
         )}
@@ -138,7 +143,7 @@ export const UnitsPart = () => {
       </p>
     </div>
   );
-}
+};
 
 interface RecentOutputsProps {
   outputs: OutputPart[];
@@ -154,230 +159,280 @@ export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
 
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-1 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-50 sticky top-0 z-10">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-50 sticky top-0 z-10">
         <p>Serial</p>
         <p className="hidden md:block">Fecha</p>
         <p>Cliente</p>
         <p>Tipo</p>
       </div>
       <div>
-        {
-          outputs.map((outputPart) => (
-            <RecentOutputPart outputPart={outputPart} key={outputPart.serial} />
-          ))
-        }
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
-        <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
+        {outputs.map((outputPart) => (
+          <RecentOutputPart outputPart={outputPart} key={outputPart.serial} />
+        ))}
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
 export const IntakePending = () => {
   return (
@@ -387,7 +442,7 @@ export const IntakePending = () => {
       </p>
     </div>
   );
-}
+};
 
 export const PencilIcon = () => {
   return (
