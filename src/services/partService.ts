@@ -35,6 +35,20 @@ export const createPart = async (partData: any) => {
   }
 };
 
+export const updatePart = async (partId: string, partData: any) => {
+  try {
+    const response = await axios.put(`${ENDPOINT.PARTS}/${partId}`, partData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error updating part:", error);
+    throw error;
+  }
+};
+
 export const outputsParts = async (partId: number) => {
   try {
     const response = await axios.get(`${ENDPOINT.OUTPUT}/${partId}`);

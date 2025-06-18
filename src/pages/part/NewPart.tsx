@@ -47,7 +47,6 @@ export const NewPart = () => {
     };
   }, [imagePreview]);
 
-
   return (
     <main className="flex flex-col gap-4">
       <Button
@@ -82,7 +81,7 @@ export const NewPart = () => {
         </div>
         <div className="block md:hidden w-full">
           <Button isLoading={isLoading} type="submit" color="primary" className="w-full">
-            {isLoading ? "Registrando parte" : "Registrar parte"}
+            {isLoading ? "Registrando parte..." : "Registrar parte"}
           </Button>
         </div>
       </Form>

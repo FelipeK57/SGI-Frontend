@@ -166,14 +166,6 @@ export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
             <RecentOutputPart outputPart={outputPart} key={outputPart.serial} />
           ))
         }
-        {/* <RecentOutputPart outputPart={{
-          serial: "123456789",
-          createdAt: "2023-10-01T12:00:00Z",
-          output: {
-            type: "sale",
-            client: { name: "Cliente de prueba" }
-          }
-        }} />
         <RecentOutputPart outputPart={{
           serial: "123456789",
           createdAt: "2023-10-01T12:00:00Z",
@@ -373,7 +365,15 @@ export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
             type: "sale",
             client: { name: "Cliente de prueba" }
           }
-        }} /> */}
+        }} />
+        <RecentOutputPart outputPart={{
+          serial: "123456789",
+          createdAt: "2023-10-01T12:00:00Z",
+          output: {
+            type: "sale",
+            client: { name: "Cliente de prueba" }
+          }
+        }} />
       </div>
     </div >
   )

@@ -13,7 +13,7 @@ import { NewPart } from "./pages/part/NewPart.tsx";
 import { EditPart } from "./pages/part/EditPart.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
       <HeroUIProvider>
         <ToastProvider placement="top-center" />
@@ -39,5 +39,5 @@ createRoot(document.getElementById("root")!).render(
         </Routes>
       </HeroUIProvider>
     </BrowserRouter>
-  </StrictMode>
+  // </StrictMode>
 );

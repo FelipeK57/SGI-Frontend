@@ -30,6 +30,7 @@ export const CardPart = ({ part }: CardPartProps) => {
       <div className="w-full aspect-square bg-zinc-50 rounded-md overflow-hidden ">
         {part.image ? (
           <img
+            loading="lazy"
             src={part.image}
             alt={part.name}
             className="w-full h-full object-contain group-hover:scale-110 p-2 transition-transform duration-300"
