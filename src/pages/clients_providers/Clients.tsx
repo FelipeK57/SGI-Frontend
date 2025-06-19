@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import type { Client } from "../../Clases";
 import { fetchClients } from "../../services/clientService";
 import { ClientRow } from "../../components/ClientRow";
+import { SearchIcon } from "../part/Parts";
+import { Input } from "@heroui/react";
 
 export const Clients = () => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [search, setSearch] = useState("");
+  const [clientsFiltered, setClientsFiltered] = useState<Client[]>([]);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const getClients = async () => {
@@ -12,167 +17,53 @@ export const Clients = () => {
       setClients(response.clients);
     };
     getClients();
-  }, []);
+  }, [reload]);
+
+  useEffect(() => {
+    if (search === "") {
+      setClientsFiltered(clients);
+    } else {
+      const filteredClients = clients.filter(
+        (client) =>
+          client.name.toLowerCase().includes(search.toLowerCase()) ||
+          client.company?.toLowerCase().includes(search.toLowerCase()) ||
+          client.email?.toLowerCase().includes(search.toLowerCase()) ||
+          client.phone?.toLowerCase().includes(search.toLowerCase())
+      );
+      setClientsFiltered(filteredClients);
+    }
+  }, [clients, search]);
 
   return (
-    <main className="w-full h-full">
-      <div className="flex flex-col w-full h-full">
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-50 sticky top-0 z-10">
-          <p>Nombre</p>
-          <p>Empresa</p>
-          <p>Email</p>
-          <p>Teléfono</p>
+    <div className="flex flex-col gap-4">
+      <Input
+        onChange={(e) => setSearch(e.target.value)}
+        type="search"
+        className="w-full md:max-w-xs"
+        startContent={<SearchIcon />}
+        variant="bordered"
+        placeholder="Buscar"
+      />
+      <main className="w-full h-full">
+        <div className="flex flex-col w-full h-full">
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+            <p>Nombre</p>
+            <p>Empresa</p>
+            <p>Email</p>
+            <p className="hidden md:block">Teléfono</p>
+          </div>
+          <div className="flex flex-col w-full h-full overflow-y-auto">
+            {clientsFiltered.map((client) => (
+              <ClientRow
+                client={client}
+                key={client.id}
+                reload={reload}
+                setReload={setReload}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col w-full h-full overflow-y-auto">
-          {clients.map((client) => (
-            <ClientRow client={client} key={client.id} />
-          ))}
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-          <ClientRow
-            client={{
-              id: 1,
-              name: "Juan Perez",
-              company: "Empresa 1",
-              email: "juan.perez@gmail.com",
-              phone: "1234567890",
-            }}
-          />
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };

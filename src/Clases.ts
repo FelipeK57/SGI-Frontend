@@ -35,3 +35,10 @@ export interface OutputPart {
   createdAt: string;
   output: Output;
 }
+
+export interface Provider {
+  id?: number;
+  name: string;
+  email: string;
+  phone: string;
+}

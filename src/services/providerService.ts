@@ -1,11 +1,11 @@
 import axios from "axios";
 import { ENDPOINT } from "../config/apiConfig";
-import type { Client } from "../Clases";
+import type { Provider } from "../Clases";
 import { addToast } from "@heroui/react";
 
-export const fetchClients = async () => {
+export const fetchProviders = async () => {
   try {
-    const response = await axios.get(`${ENDPOINT.CLIENTS}`);
+    const response = await axios.get(`${ENDPOINT.PROVIDERS}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -13,12 +13,15 @@ export const fetchClients = async () => {
   }
 };
 
-export const updateClient = async (
-  clientId: string | undefined,
-  client: Client
+export const updateProvider = async (
+  providerId: string | undefined,
+  provider: Provider
 ) => {
   try {
-    const response = await axios.put(`${ENDPOINT.CLIENTS}/${clientId}`, client);
+    const response = await axios.put(
+      `${ENDPOINT.PROVIDERS}/${providerId}`,
+      provider
+    );
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -35,14 +38,9 @@ export const updateClient = async (
   }
 };
 
-export const createClient = async (client: Client) => {
+export const createProvider = async (provider: Provider) => {
   try {
-    const response = await axios.post(`${ENDPOINT.CLIENTS}`, {
-      name: client.name,
-      company: client.company,
-      email: client.email,
-      phone: client.phone,
-    });
+    const response = await axios.post(`${ENDPOINT.PROVIDERS}`, provider);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
