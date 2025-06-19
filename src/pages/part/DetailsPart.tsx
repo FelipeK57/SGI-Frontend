@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import type { Part } from "../../Clases";
-import { fetchPart } from "../../services/partService";
+import type { Part, OutputPart } from "../../Clases";
+import { fetchPart, outputsParts } from "../../services/partService";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { useAuth } from "../../store/useAuth";
+import { RecentOutputPart } from "../../components/RecentOutputPart";
 
 export const DetailsPart = () => {
   const [part, setPart] = useState<Part | null>(null);
+  const [outputs, setOutputs] = useState<OutputPart[] | []>([]);
   const navigate = useNavigate();
   const partId = useLocation().pathname.split("/").pop();
   const { role } = useAuth();
@@ -16,6 +18,13 @@ export const DetailsPart = () => {
       const partData = await fetchPart(partId || "");
       setPart(partData.part);
     };
+
+    const fetchOutputPartData = async () => {
+      const partData = await outputsParts(Number(partId));
+      setOutputs(partData.outputs);
+    };
+
+    fetchOutputPartData();
     fetchPartData();
   }, []);
 
@@ -35,7 +44,12 @@ export const DetailsPart = () => {
           <ArrowLeftIcon />
         </Button>
         {(role === "admin" || role === "auxiliary") && (
-          <Button isIconOnly color="primary" variant="bordered">
+          <Button
+            onPress={() => navigate("edit")}
+            isIconOnly
+            color="primary"
+            variant="bordered"
+          >
             <PencilIcon />
           </Button>
         )}
@@ -57,20 +71,20 @@ export const DetailsPart = () => {
             <DetailPart part={part} />
           </Tab>
           <Tab key="stock" title="Unidades">
-            <p>Unidades</p>
+            <UnitsPart />
           </Tab>
           <Tab key="output-history" title="Historial de salidas">
-            <p>Historial de salidas</p>
+            <RecentOuputs outputs={outputs} />
           </Tab>
           <Tab key="pending-input" title="Pendientes de ingreso">
-            <p>Pendientes de ingreso</p>
+            <IntakePending />
           </Tab>
         </Tabs>
       </div>
-      <div className="md:flex flex-col gap-2 h-full hidden">
+      <div className="md:flex flex-col gap-2 h-full overflow-y-auto hidden">
         <Tabs
           classNames={{
-            panel: "h-full overflow-y-auto p-0",
+            panel: "h-full overflow-y-auto pt-2",
             tabList: "p-0 w-full",
           }}
           color="primary"
@@ -78,13 +92,13 @@ export const DetailsPart = () => {
           aria-label="Options"
         >
           <Tab key="stock" title="Unidades">
-            <p>Unidades</p>
+            <UnitsPart />
           </Tab>
           <Tab key="output-history" title="Historial de salidas">
-            <p>Historial de salidas</p>
+            <RecentOuputs outputs={outputs} />
           </Tab>
           <Tab key="pending-input" title="Pendientes de ingreso">
-            <p>Pendientes de ingreso</p>
+            <IntakePending />
           </Tab>
         </Tabs>
       </div>
@@ -99,7 +113,7 @@ export const DetailPart = ({ part }: { part: Part }) => {
       <img
         src={part.image}
         alt={part.name}
-        className="w-full aspect-square bg-white object-contain p-2
+        className="w-full aspect-square bg-zinc-50 object-contain p-2
          rounded-md md:w-1/4 md:max-w-xs"
       />
       <div className="flex flex-col md:gap-2 max-w-sm">
@@ -117,6 +131,315 @@ export const DetailPart = ({ part }: { part: Part }) => {
           <span className="text-sm text-zinc-700">{part.description}</span>
         </p>
       </div>
+    </div>
+  );
+};
+
+export const UnitsPart = () => {
+  return (
+    <div className="flex items-center justify-center">
+      <p className="text-zinc-500 text-sm font-light">
+        Units part is not implemented yet. Please check back later.
+      </p>
+    </div>
+  );
+};
+
+interface RecentOutputsProps {
+  outputs: OutputPart[];
+}
+export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
+  if (outputs.length === 0) {
+    return (
+      <p className="w-full text-center p-2 text-zinc-500 text-sm font-light">
+        No hay salidas
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-50 sticky top-0 z-10">
+        <p>Serial</p>
+        <p className="hidden md:block">Fecha</p>
+        <p>Cliente</p>
+        <p>Tipo</p>
+      </div>
+      <div>
+        {outputs.map((outputPart) => (
+          <RecentOutputPart outputPart={outputPart} key={outputPart.serial} />
+        ))}
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+        <RecentOutputPart
+          outputPart={{
+            serial: "123456789",
+            createdAt: "2023-10-01T12:00:00Z",
+            output: {
+              type: "sale",
+              client: { name: "Cliente de prueba" },
+            },
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const IntakePending = () => {
+  return (
+    <div className="flex items-center justify-center">
+      <p className="text-zinc-500 text-sm font-light">
+        Intake pending is not implemented yet. Please check back later.
+      </p>
     </div>
   );
 };

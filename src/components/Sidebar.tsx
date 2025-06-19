@@ -15,6 +15,7 @@ export const serviceRoleRoutes = [{ name: "Partes", path: "parts" }];
 export const routes = [
   { name: "Partes", path: "parts" },
   { name: "Cotizaciones clientes", path: "client-quotes" },
+  { name: "Clientes y proveedores", path: "clients-and-providers" },
 ];
 
 export const selectedRouteStyle = (path: string) => {

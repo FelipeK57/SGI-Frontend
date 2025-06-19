@@ -16,3 +16,22 @@ export interface Part {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Client {
+  id?: number;
+  name: string;
+  company?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface Output {
+  type: string;
+  client: Client;
+}
+
+export interface OutputPart {
+  serial: string;
+  createdAt: string;
+  output: Output;
+}

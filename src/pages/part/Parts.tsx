@@ -8,6 +8,8 @@ import { useNavigate } from "react-router";
 
 export const Parts = () => {
   const [parts, setParts] = useState<Part[]>([]);
+  const [partsFiltered, setPartsFiltered] = useState<Part[]>([]);
+  const [searchedPart, setSearchedPart] = useState<string>("");
   const { role } = useAuth();
   const navigate = useNavigate()
 
@@ -23,6 +25,17 @@ export const Parts = () => {
     fetchPartsData();
   }, []);
 
+  useEffect(() => {
+    if (searchedPart.trim() === "") {
+      setPartsFiltered(parts);
+    } else {
+      const filteredParts = parts.filter((part) =>
+        part.name.toLowerCase().includes(searchedPart.toLowerCase()) || part.partNumber.toLowerCase().includes(searchedPart.toLowerCase()) || part.description.toLowerCase().includes(searchedPart.toLowerCase()) || part.producer.toLowerCase().includes(searchedPart.toLowerCase())
+      );
+      setPartsFiltered(filteredParts);
+    }
+  }, [searchedPart, parts]);
+
   return (
     <div className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between w-full">
@@ -37,6 +50,9 @@ export const Parts = () => {
       </div>
       <div className="flex justify-between items-center gap-2">
         <Input
+          onChange={(e) => {
+            setSearchedPart(e.target.value);
+          }}
           className="w-full md:max-w-xs"
           startContent={<SearchIcon />}
           type="search"
@@ -53,8 +69,8 @@ export const Parts = () => {
         className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-5 overflow-y-auto w-full
       "
       >
-        {parts.length > 0 ? (
-          parts.map((part) => {
+        {partsFiltered.length > 0 ? (
+          partsFiltered.map((part) => {
             return <CardPart part={part} key={part.id} />;
           })
         ) : (
