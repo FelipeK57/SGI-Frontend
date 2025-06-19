@@ -14,6 +14,8 @@ import { EditPart } from "./pages/part/EditPart.tsx";
 import { ClientsProvidersList } from "./pages/clients_providers/ClientsProvidersList.tsx";
 import { Clients } from "./pages/clients_providers/Clients.tsx";
 import { Providers } from "./pages/clients_providers/Providers.tsx";
+import { ClientQuotations } from "./pages/client_quotation/ClientQuotations.tsx";
+import { ReloadProvider } from "./context/ClientProviderContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -28,15 +30,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="parts/new" element={<NewPart />} />
           <Route path="parts/:partId/edit" element={<EditPart />} />
           <Route path="parts/:partId" element={<DetailsPart />} />
-          <Route
-            path="client-quotes"
-            element={
-              <h1 className="text-center text-2xl">Client Quotes Page</h1>
-            }
-          />
+          <Route path="client-quotes" element={<ClientQuotations />} />
           <Route
             path="clients-and-providers"
-            element={<ClientsProvidersList />}
+            element={
+              <ReloadProvider>
+                <ClientsProvidersList />
+              </ReloadProvider>
+            }
           >
             <Route index element={<Navigate to="clients" replace />} />
             <Route index path="clients" element={<Clients />} />

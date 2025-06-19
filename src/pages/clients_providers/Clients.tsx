@@ -4,12 +4,14 @@ import { fetchClients } from "../../services/clientService";
 import { ClientRow } from "../../components/ClientRow";
 import { SearchIcon } from "../part/Parts";
 import { Input } from "@heroui/react";
+import { useReload } from "../../context/ClientProviderContext";
 
 export const Clients = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState("");
   const [clientsFiltered, setClientsFiltered] = useState<Client[]>([]);
-  const [reload, setReload] = useState(false);
+  // const [reload, setReload] = useState(false);
+  const { reload, setReload } = useReload();
 
   useEffect(() => {
     const getClients = async () => {
@@ -46,22 +48,32 @@ export const Clients = () => {
       />
       <main className="w-full h-full">
         <div className="flex flex-col w-full h-full">
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
-            <p>Nombre</p>
-            <p>Empresa</p>
-            <p>Email</p>
-            <p className="hidden md:block">Teléfono</p>
-          </div>
-          <div className="flex flex-col w-full h-full overflow-y-auto">
-            {clientsFiltered.map((client) => (
-              <ClientRow
-                client={client}
-                key={client.id}
-                reload={reload}
-                setReload={setReload}
-              />
-            ))}
-          </div>
+          {clientsFiltered.length > 0 ? (
+            <>
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+                <p>Nombre</p>
+                <p>Empresa</p>
+                <p>Email</p>
+                <p className="hidden md:block">Teléfono</p>
+              </div>
+              <div className="flex flex-col w-full h-full overflow-y-auto">
+                {clientsFiltered.map((client) => (
+                  <ClientRow
+                    client={client}
+                    key={client.id}
+                    reload={reload}
+                    setReload={setReload}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col w-full h-full overflow-y-auto items-center justify-center">
+              <p className="text-zinc-500 text-sm font-light">
+                No hay clientes disponibles
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>
