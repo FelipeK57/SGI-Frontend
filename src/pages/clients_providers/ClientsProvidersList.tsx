@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { createClient } from "../../services/clientService";
 import { createProvider } from "../../services/providerService";
+import { useReload } from "../../context/ClientProviderContext";
 
 export const ClientsProvidersList = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ export const NewClientProvider = () => {
   const isClients =
     location.pathname === "/dashboard/clients-and-providers/clients";
   const [isLoading, setIsLoading] = useState(false);
+  const { reload, setReload } = useReload();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,6 +83,7 @@ export const NewClientProvider = () => {
           description: "El cliente se ha creado correctamente",
           color: "success",
         });
+        setReload(!reload);
       }
     } else {
       const response = await createProvider({
@@ -95,6 +98,7 @@ export const NewClientProvider = () => {
           description: "El proveedor se ha creado correctamente",
           color: "success",
         });
+        setReload(!reload);
       }
     }
     setIsLoading(false);

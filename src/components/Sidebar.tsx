@@ -47,7 +47,7 @@ export const Sidebar = () => {
                 <p className="text-xl">Menu</p>
               </DrawerHeader>
               <DrawerBody>
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-col gap-4">
                   {role === "services"
                     ? serviceRoleRoutes.map((route) => {
                         return (

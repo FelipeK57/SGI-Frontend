@@ -42,3 +42,11 @@ export interface Provider {
   email: string;
   phone: string;
 }
+
+export interface ClientQuotation {
+  id?: number;
+  code: string;
+  client: Client;
+  createdAt: string;
+  state: "Aceptada" | "Cancelada" | "Pendiente";
+}
