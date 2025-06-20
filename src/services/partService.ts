@@ -58,3 +58,13 @@ export const outputsParts = async (partId: number) => {
     throw error;
   }
 };
+
+export const getPartByNumber = async (partNumber: string) => {
+  try {
+    const response = await axios.get(`${ENDPOINT.PARTS}/part-number/${partNumber}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching part by number:", error);
+    throw error;
+  }
+};
