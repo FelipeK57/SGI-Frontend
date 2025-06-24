@@ -1,17 +1,22 @@
 import { Button, Input } from "@heroui/react";
 import type { Part } from "../Clases";
 import { useState } from "react";
+import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
+import { deleteQuotationPart } from "../services/clientQuotationService";
 
 interface QuotePartProps {
   part: Part;
+  partAdded?: PartAdded;
+  quotationPartQuantity?: number;
+  quotationPartUnitPrice?: number;
   onRemovePart: (part: Part) => void;
   onQuantityChange: (part: Part, quantity: number) => void;
   onPriceUnitChange: (part: Part, priceUnit: number) => void;
 }
 
-export const QuotePart = ({ part, onRemovePart, onQuantityChange, onPriceUnitChange }: QuotePartProps) => {
-  const [quantity, setQuantity] = useState(1);
-  const [priceUnit, setPriceUnit] = useState(0);
+export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPartUnitPrice, onRemovePart, onQuantityChange, onPriceUnitChange }: QuotePartProps) => {
+  const [quantity, setQuantity] = useState(quotationPartQuantity || 1);
+  const [priceUnit, setPriceUnit] = useState(quotationPartUnitPrice || 0);
 
   const handleQuantityChange = (value: number) => {
     if (value < 1) {
@@ -21,13 +26,24 @@ export const QuotePart = ({ part, onRemovePart, onQuantityChange, onPriceUnitCha
     onQuantityChange(part, value);
   };
 
+  const handleDeletePart = async () => {
+    if (!partAdded?.id) {
+      onRemovePart(part);
+      return
+    }
+    const response = await deleteQuotationPart(partAdded.id);
+    if (response && response.status === 200) {
+      onRemovePart(part);
+    }
+  }
+
   return (
     <div className="flex border-1 p-3 gap-4 rounded-md">
-      {/* <img
+      <img
         src={part.image}
         alt={part.name}
-        className="w-full aspect-square object-contain bg-zinc-50 rounded-md"
-      /> */}
+        className="hidden md:flex w-1/4 aspect-square object-contain bg-zinc-50 rounded-md"
+      />
       <div className="flex flex-col gap-2 w-full">
         <p className="font-semibold">{part.name}</p>
         <p className="text-xs text-zinc-500">{part.partNumber}</p>
@@ -54,7 +70,7 @@ export const QuotePart = ({ part, onRemovePart, onQuantityChange, onPriceUnitCha
           isIconOnly
           className="rounded-full"
           color="danger"
-          onPress={() => onRemovePart(part)}
+          onPress={() => handleDeletePart()}
         >
           <TrashIcon />
         </Button>

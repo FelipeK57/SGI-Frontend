@@ -66,7 +66,7 @@ export const ClientQuotations = () => {
       <div className="flex flex-col overflow-y-auto h-full">
         {filteredQuotations.length > 0 ? (
           <>
-            <div className="grid grid-cols-[25%_1fr_1fr] md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+            <div className="grid grid-cols-[20%_1fr_1fr] md:grid-cols-4 gap-4 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
               <p>Código</p>
               <p>Cliente</p>
               <p className="hidden md:block">Fecha</p>

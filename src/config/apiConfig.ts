@@ -7,5 +7,6 @@ export const ENDPOINT = {
   CLIENTS: `${URL}/client`,
   PROVIDERS: `${URL}/provider`,
   CLIENT_QUOTATIONS: `${URL}/client-quotation`,
+  QUOTATION_PART: `${URL}/quotation-part`,
   AUTH: `${API_URL}/external-systems-auth`,
 };

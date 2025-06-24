@@ -16,11 +16,12 @@ import { QuotePart } from "../../components/QuotePart";
 import { createClientQuotation } from "../../services/clientQuotationService";
 
 export interface PartAdded {
+  id?: string;
   partId: number;
   part: Part;
   quantity?: number;
-  priceUnit?: number;
-  priceTotal?: number;
+  unitPrice?: number;
+  totalPrice?: number;
 }
 
 export const NewClientQuotation = () => {
@@ -54,9 +55,18 @@ export const NewClientQuotation = () => {
   };
 
   const handleAddPart = (part: Part) => {
+    if (partsAdded.some((p) => p.partId === part.id)) {
+      addToast({
+        title: "Parte ya agregada",
+        description: "La parte ya ha sido agregada a la cotización",
+        color: "warning",
+        timeout: 3000,
+      });
+      return;
+    }
     setPartsAdded([
       ...partsAdded,
-      { partId: part.id, part: part, quantity: 1, priceUnit: 0, priceTotal: 0 },
+      { partId: part.id, part: part, quantity: 1, unitPrice: 0, totalPrice: 0 },
     ]);
     setPartNumber("");
     setPartsFound([]);
@@ -67,10 +77,10 @@ export const NewClientQuotation = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-              ...p,
-              quantity,
-              priceTotal: p.priceUnit ? p.priceUnit * quantity : 0,
-            }
+            ...p,
+            quantity,
+            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+          }
           : p
       )
     );
@@ -81,10 +91,10 @@ export const NewClientQuotation = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-              ...p,
-              priceUnit,
-              priceTotal: p.quantity ? p.quantity * priceUnit : 0,
-            }
+            ...p,
+            unitPrice: priceUnit,
+            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+          }
           : p
       )
     );
@@ -110,7 +120,7 @@ export const NewClientQuotation = () => {
       navigate("/dashboard/client-quotes");
       addToast({
         title: "Cotización creada",
-        description: "Cotización creada correctamente",
+        description: "La cotización ha sido creada correctamente",
         color: "success",
         timeout: 3000,
       });
@@ -142,7 +152,7 @@ export const NewClientQuotation = () => {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-4 h-full">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-4 h-full overflow-hidden">
         <div className="flex flex-col gap-2">
           <Autocomplete
             label="Cliente"
@@ -227,7 +237,7 @@ export const NewClientQuotation = () => {
           <p className="text-sm">Partes agregadas</p>
           <p className="font-semibold">
             Total: $
-            {partsAdded.reduce((acc, part) => acc + (part.priceTotal || 0), 0)}
+            {partsAdded.reduce((acc, part) => acc + (part.totalPrice || 0), 0)}
           </p>
           <div className="flex flex-col gap-2 h-full overflow-y-auto">
             {partsAdded.length > 0 && (

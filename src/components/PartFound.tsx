@@ -14,9 +14,9 @@ export const PartFound = ({ part, onAddPart }: PartFoundProps) => {
         <img
           src={part.image}
           alt={part.name}
-          className="w-1/3 aspect-square object-contain bg-zinc-50 rounded-md"
+          className="w-1/3 md:w-1/4 aspect-square object-contain bg-zinc-100 rounded-md"
         />
-        <div className="flex flex-col gap-2 w-full justify-between">
+        <div className="flex flex-col gap-2 w-full md:justify-between">
           <p className="font-semibold">{part.name}</p>
           <p className="text-xs">
             <span className="text-zinc-700">Número de parte:</span>{" "}
