@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { App } from "./App.tsx";
@@ -16,6 +16,8 @@ import { Clients } from "./pages/clients_providers/Clients.tsx";
 import { Providers } from "./pages/clients_providers/Providers.tsx";
 import { ClientQuotations } from "./pages/client_quotation/ClientQuotations.tsx";
 import { ReloadProvider } from "./context/ClientProviderContext.tsx";
+import { NewClientQuotation } from "./pages/client_quotation/NewClientQuotation.tsx";
+import { ClientQuotationDetails } from "./pages/client_quotation/ClientQuotationDetails.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -31,6 +33,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="parts/:partId/edit" element={<EditPart />} />
           <Route path="parts/:partId" element={<DetailsPart />} />
           <Route path="client-quotes" element={<ClientQuotations />} />
+          <Route path="client-quotes/new" element={<NewClientQuotation />} />
+          <Route path="client-quotes/:quotationId" element={<ClientQuotationDetails />} />
           <Route
             path="clients-and-providers"
             element={

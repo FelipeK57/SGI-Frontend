@@ -27,7 +27,7 @@ export const CardPart = ({ part }: CardPartProps) => {
       to={`${part.id}`}
       className="flex flex-col gap-1 w-full rounded-md group"
     >
-      <div className="w-full aspect-square bg-zinc-50 rounded-md overflow-hidden ">
+      <div className="w-full aspect-square bg-zinc-100 rounded-md overflow-hidden ">
         {part.image ? (
           <img
             loading="lazy"
