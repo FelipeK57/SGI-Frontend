@@ -18,6 +18,7 @@ import { ClientQuotations } from "./pages/client_quotation/ClientQuotations.tsx"
 import { ReloadProvider } from "./context/ClientProviderContext.tsx";
 import { NewClientQuotation } from "./pages/client_quotation/NewClientQuotation.tsx";
 import { ClientQuotationDetails } from "./pages/client_quotation/ClientQuotationDetails.tsx";
+import { ProviderQuotations } from "./pages/provider_quotation/ProviderQuotations.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -35,6 +36,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="client-quotes" element={<ClientQuotations />} />
           <Route path="client-quotes/new" element={<NewClientQuotation />} />
           <Route path="client-quotes/:quotationId" element={<ClientQuotationDetails />} />
+          <Route path="provider-quotes" element={<ProviderQuotations /> } />
           <Route
             path="clients-and-providers"
             element={

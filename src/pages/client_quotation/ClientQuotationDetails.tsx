@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { getClientQuotationById, updateClientQuotation } from "../../services/clientQuotationService";
-import { addToast, Button, Input, Select, SelectItem, type Selection } from "@heroui/react";
+import {
+  getClientQuotationById,
+  updateClientQuotation,
+} from "../../services/clientQuotationService";
+import {
+  addToast,
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  type Selection,
+} from "@heroui/react";
 import type { ClientQuotation, Part } from "../../Clases";
 import { formatDate, getStateColor } from "../../components/ClientQuotationRow";
 import type { PartAdded } from "./NewClientQuotation";
@@ -27,14 +37,19 @@ export const ClientQuotationDetails = () => {
       setQuotation(response.quotation);
       setDate(formatDate(response.quotation.createdAt));
       setStateSelected(new Set([response.quotation.state]));
-      setPartsAdded(response.quotation.quotationParts.map((part: PartAdded) => ({
-        id: part.id,
-        partId: part.part.id,
-        part: part.part,
-        quantity: part.quantity,
-        unitPrice: Number(part.unitPrice),
-        totalPrice: Number(part.totalPrice)
-      } as PartAdded)));
+      setPartsAdded(
+        response.quotation.quotationParts.map(
+          (part: PartAdded) =>
+            ({
+              id: part.id,
+              partId: part.part.id,
+              part: part.part,
+              quantity: part.quantity,
+              unitPrice: Number(part.unitPrice),
+              totalPrice: Number(part.totalPrice),
+            } as PartAdded)
+        )
+      );
     };
     fetchQuotation();
   }, [quotationId]);
@@ -82,10 +97,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-            ...p,
-            quantity,
-            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
-          }
+              ...p,
+              quantity,
+              totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+            }
           : p
       )
     );
@@ -96,10 +111,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-            ...p,
-            unitPrice: priceUnit,
-            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
-          }
+              ...p,
+              unitPrice: priceUnit,
+              totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+            }
           : p
       )
     );
@@ -155,8 +170,8 @@ export const ClientQuotationDetails = () => {
         </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4 h-full overflow-hidden">
-        <section className="flex flex-col gap-4 h-full overflow-hidden">
-          <div className="hidden md:grid grid-cols-2 gap-4">
+        <section className="flex flex-col gap-4 h-full">
+          <div className="grid grid-cols-2 gap-4">
             <Input
               label="Fecha de emisión"
               labelPlacement="outside"
@@ -164,25 +179,20 @@ export const ClientQuotationDetails = () => {
               isReadOnly
               value={date}
             />
-            <div className="flex flex-col gap-2">
-              <p className="text-sm">Estado</p>
-              <p
-                className={`px-4 py-1 rounded-full border-2 text-sm md:text-base text-center w-fit ${getStateColor(
-                  quotation?.state ?? ""
-                )}`}
-              >
-                {quotation?.state}
-              </p>
-            </div>
+            <Select
+              label="Estado"
+              labelPlacement="outside"
+              placeholder="Selecciona el nuevo estado"
+              variant="bordered"
+              selectedKeys={stateSelected}
+              onSelectionChange={setStateSelected}
+              disallowEmptySelection={true}
+            >
+              {states.map((state) => (
+                <SelectItem key={state.key}>{state.value}</SelectItem>
+              ))}
+            </Select>
           </div>
-          <Input
-            label="Fecha de emisión"
-            labelPlacement="outside"
-            variant="bordered"
-            isReadOnly
-            value={date}
-            className="md:hidden"
-          />
           <Input
             label="Cliente"
             labelPlacement="outside"
@@ -190,29 +200,6 @@ export const ClientQuotationDetails = () => {
             isReadOnly
             value={quotation?.client.name}
           />
-          <div className="flex flex-col gap-2 md:hidden">
-            <p className="text-sm">Estado</p>
-            <p
-              className={`px-4 py-1 rounded-full border-2 text-sm md:text-base text-center w-fit ${getStateColor(
-                quotation?.state ?? ""
-              )}`}
-            >
-              {quotation?.state}
-            </p>
-          </div>
-          <Select
-            label="Cambiar estado"
-            labelPlacement="outside"
-            placeholder="Selecciona el nuevo estado"
-            variant="bordered"
-            selectedKeys={stateSelected}
-            onSelectionChange={setStateSelected}
-            disallowEmptySelection={true}
-          >
-            {states.map((state) => (
-              <SelectItem key={state.key}>{state.value}</SelectItem>
-            ))}
-          </Select>
           <Input
             value={partNumber}
             onChange={(e) => setPartNumber(e.target.value)}
@@ -266,7 +253,10 @@ export const ClientQuotationDetails = () => {
             <p className="text-sm">Partes agregadas</p>
             <p className="font-semibold">
               Total: $
-              {partsAdded.reduce((acc, part) => acc + (part.totalPrice || 0), 0)}
+              {partsAdded.reduce(
+                (acc, part) => acc + (part.totalPrice || 0),
+                0
+              )}
             </p>
             <div className="flex flex-col gap-2 h-full overflow-y-auto">
               {partsAdded.length > 0 && (
@@ -308,6 +298,6 @@ export const ClientQuotationDetails = () => {
           {isLoading ? "Guardando..." : "Guardar cambios"}
         </Button>
       </div>
-    </main >
+    </main>
   );
 };

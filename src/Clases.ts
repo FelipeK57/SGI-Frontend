@@ -50,3 +50,12 @@ export interface ClientQuotation {
   createdAt: string;
   state: "Aceptada" | "Cancelada" | "Pendiente";
 }
+
+export interface ProviderQuotation {
+  id?: number;
+  code: string;
+  provider: Provider;
+  createdAt: string;
+  state: "Aceptada" | "Cancelada" | "Pendiente";
+  quotationType: "Exterior" | "Local";
+}
