@@ -13,12 +13,27 @@ import {
   type Selection,
 } from "@heroui/react";
 import type { ClientQuotation, Part } from "../../Clases";
-import { formatDate, getStateColor } from "../../components/ClientQuotationRow";
+import { formatDate } from "../../components/ClientQuotationRow";
 import type { PartAdded } from "./NewClientQuotation";
 import { QuotePart } from "../../components/QuotePart";
 import { SearchIcon } from "../part/Parts";
 import { getPartByNumber } from "../../services/partService";
 import { PartFound } from "../../components/PartFound";
+
+export const states = [
+  {
+    key: "Aceptada",
+    value: "Aceptada",
+  },
+  {
+    key: "Cancelada",
+    value: "Cancelada",
+  },
+  {
+    key: "Pendiente",
+    value: "Pendiente",
+  },
+];
 
 export const ClientQuotationDetails = () => {
   const quotationId = useLocation().pathname.split("/").pop()!;
@@ -40,34 +55,19 @@ export const ClientQuotationDetails = () => {
       setPartsAdded(
         response.quotation.quotationParts.map(
           (part: PartAdded) =>
-            ({
-              id: part.id,
-              partId: part.part.id,
-              part: part.part,
-              quantity: part.quantity,
-              unitPrice: Number(part.unitPrice),
-              totalPrice: Number(part.totalPrice),
-            } as PartAdded)
+          ({
+            id: part.id,
+            partId: part.part.id,
+            part: part.part,
+            quantity: part.quantity,
+            unitPrice: Number(part.unitPrice),
+            totalPrice: Number(part.totalPrice),
+          } as PartAdded)
         )
       );
     };
     fetchQuotation();
   }, [quotationId]);
-
-  const states = [
-    {
-      key: "Aceptada",
-      value: "Aceptada",
-    },
-    {
-      key: "Cancelada",
-      value: "Cancelada",
-    },
-    {
-      key: "Pendiente",
-      value: "Pendiente",
-    },
-  ];
 
   const handleSearchPart = async (partNumber: string) => {
     const data = await getPartByNumber(partNumber);
@@ -97,10 +97,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-              ...p,
-              quantity,
-              totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
-            }
+            ...p,
+            quantity,
+            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+          }
           : p
       )
     );
@@ -111,10 +111,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-              ...p,
-              unitPrice: priceUnit,
-              totalPrice: p.quantity ? p.quantity * priceUnit : 0,
-            }
+            ...p,
+            unitPrice: priceUnit,
+            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+          }
           : p
       )
     );
@@ -170,7 +170,7 @@ export const ClientQuotationDetails = () => {
         </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4 h-full overflow-hidden">
-        <section className="flex flex-col gap-4 h-full">
+        <section className="flex flex-col gap-4 h-fit">
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Fecha de emisión"

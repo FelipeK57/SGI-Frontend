@@ -97,3 +97,15 @@ export const deleteQuotationPart = async (quotationId: string) => {
     }
   }
 };
+
+export const getClientQuotationByCode = async (quotationCode: string) => {
+  try {
+    const response = await axios.get(
+      `${ENDPOINT.CLIENT_QUOTATIONS}/code/${quotationCode}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

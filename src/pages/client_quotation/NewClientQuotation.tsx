@@ -152,7 +152,7 @@ export const NewClientQuotation = () => {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-4 h-full overflow-hidden">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-4 h-fit overflow-hidden">
         <div className="flex flex-col gap-2">
           <Autocomplete
             label="Cliente"

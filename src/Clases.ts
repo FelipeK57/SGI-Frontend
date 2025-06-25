@@ -49,6 +49,7 @@ export interface ClientQuotation {
   client: Client;
   createdAt: string;
   state: "Aceptada" | "Cancelada" | "Pendiente";
+  totalPrice?: number;
 }
 
 export interface ProviderQuotation {
