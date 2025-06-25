@@ -1,26 +1,27 @@
-import axios from "axios";
 import { ENDPOINT } from "../config/apiConfig";
-import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
+import axios from "axios";
+import type { QuotationAdded } from "../pages/provider_quotation/NewProviderQuotation";
 import { addToast } from "@heroui/react";
 
-export const getClientQuotations = async () => {
+export const getProviderQuotations = async () => {
   try {
-    const response = await axios.get(`${ENDPOINT.CLIENT_QUOTATIONS}`);
+    const response = await axios.get(`${ENDPOINT.PROVIDER_QUOTATIONS}`);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
 
-export const createClientQuotation = async (
-  clientId: number,
-  parts: PartAdded[]
+export const createProviderQuotation = async (
+  providerId: number,
+  quotationType: string,
+  quotations: QuotationAdded[]
 ) => {
   try {
-    const response = await axios.post(`${ENDPOINT.CLIENT_QUOTATIONS}`, {
-      clientId,
-      parts,
+    const response = await axios.post(`${ENDPOINT.PROVIDER_QUOTATIONS}`, {
+      providerId,
+      quotationType,
+      quotations,
     });
     return response;
   } catch (error) {
@@ -33,33 +34,32 @@ export const createClientQuotation = async (
           timeout: 3000,
         });
       }
-      throw error;
     }
   }
 };
 
-export const getClientQuotationById = async (quotationId: string) => {
+export const getProviderQuotationById = async (quotationId: string) => {
   try {
     const response = await axios.get(
-      `${ENDPOINT.CLIENT_QUOTATIONS}/${quotationId}`
+      `${ENDPOINT.PROVIDER_QUOTATIONS}/${quotationId}`
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
 
-export const updateClientQuotation = async (
+export const updateProviderQuotation = async (
   quotationId: string,
   state: string,
-  parts: PartAdded[]
+  quotations: QuotationAdded[]
 ) => {
   try {
-    const response = await axios.put(`${ENDPOINT.CLIENT_QUOTATIONS}/`, {
-      clientQuotationId: quotationId,
+    const response = await axios.put(`${ENDPOINT.PROVIDER_QUOTATIONS}/`, {
+      providerQuotationId: quotationId,
       state,
-      parts,
+      quotations,
     });
     return response;
   } catch (error) {
@@ -72,15 +72,14 @@ export const updateClientQuotation = async (
           timeout: 3000,
         });
       }
-      throw error;
     }
   }
 };
 
-export const deleteQuotationPart = async (quotationId: string) => {
+export const deleteClientQuotation = async (quotationId: number) => {
   try {
     const response = await axios.delete(
-      `${ENDPOINT.QUOTATION_PART}/${quotationId}`
+      `${ENDPOINT.PROVIDER_QUOTATIONS}/quotation/${quotationId}`
     );
     return response;
   } catch (error) {
@@ -93,19 +92,6 @@ export const deleteQuotationPart = async (quotationId: string) => {
           timeout: 3000,
         });
       }
-      throw error;
     }
   }
-};
-
-export const getClientQuotationByCode = async (quotationCode: string) => {
-  try {
-    const response = await axios.get(
-      `${ENDPOINT.CLIENT_QUOTATIONS}/code/${quotationCode}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+}

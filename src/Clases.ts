@@ -49,4 +49,14 @@ export interface ClientQuotation {
   client: Client;
   createdAt: string;
   state: "Aceptada" | "Cancelada" | "Pendiente";
+  totalPrice?: number;
+}
+
+export interface ProviderQuotation {
+  id?: number;
+  code: string;
+  provider: Provider;
+  createdAt: string;
+  state: "Aceptada" | "Cancelada" | "Pendiente";
+  quotationType: "Exterior" | "Local";
 }
