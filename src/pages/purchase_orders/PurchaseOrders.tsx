@@ -32,7 +32,7 @@ export const PurchaseOrders = () => {
       {
         purchaseOrders.length > 0 ? (
           <>
-            <div className="grid grid-cols-[30%_1fr_1fr] md:grid-cols-5 gap-4 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+            <div className="grid grid-cols-[20%_1fr_1fr] md:grid-cols-5 gap-4 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
               <p>Código</p>
               <p>Proveedor</p>
               <p className="hidden md:block">Fecha</p>

@@ -73,3 +73,8 @@ export interface PurchaseOrder {
     | "Pend. Aduana"
     | "Finalizada";
 }
+
+export interface Quotation {
+  id?: number;
+  clientQuotation: ClientQuotation;
+}

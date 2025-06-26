@@ -50,7 +50,6 @@ export const NewProviderQuotation = () => {
 
   const handleClientQuotation = async (quotationCode: string) => {
     const response = await getClientQuotationByCode(quotationCode);
-    console.log("Quotation response:", response);
     setQuotationFound(response.quotation);
   }
 

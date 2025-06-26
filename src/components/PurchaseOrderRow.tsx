@@ -22,7 +22,7 @@ export const PurchaseOrderRow = ({ purchaseOrder }: PurchaseOrderRowProps) => {
   return (
     <div
       onClick={() => navigate(`${purchaseOrder.id}`)}
-      className="grid grid-cols-[30%_1fr_1fr] md:grid-cols-5 gap-4 border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
+      className="grid grid-cols-[20%_1fr_1fr] md:grid-cols-5 gap-4 border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
     >
       <p className="flex items-center">{purchaseOrder.code}</p>
       <p className="flex items-center truncate">{purchaseOrder.providerQuotation.provider.name}</p>
