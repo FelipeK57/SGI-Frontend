@@ -43,7 +43,6 @@ export const getProviderQuotationById = async (quotationId: string) => {
     const response = await axios.get(
       `${ENDPOINT.PROVIDER_QUOTATIONS}/${quotationId}`
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw error;
@@ -80,6 +79,26 @@ export const deleteClientQuotation = async (quotationId: number) => {
   try {
     const response = await axios.delete(
       `${ENDPOINT.PROVIDER_QUOTATIONS}/quotation/${quotationId}`
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Error",
+          description: error.response.data.message,
+          color: "danger",
+          timeout: 3000,
+        });
+      }
+    }
+  }
+}
+
+export const generatePurchaseOrder = async (quotationId: string) => {
+  try {
+    const response = await axios.post(
+      `${ENDPOINT.PROVIDER_QUOTATIONS}/purchase-order/${quotationId}`
     );
     return response;
   } catch (error) {

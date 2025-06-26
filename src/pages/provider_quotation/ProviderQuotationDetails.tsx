@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { getProviderQuotationById, updateProviderQuotation } from "../../services/providerQuotationService";
+import { generatePurchaseOrder, getProviderQuotationById, updateProviderQuotation } from "../../services/providerQuotationService";
 import type { ClientQuotation, ProviderQuotation } from "../../Clases";
 import { addToast, Button, Input, Radio, RadioGroup, Select, type Selection, SelectItem } from "@heroui/react";
 import { SearchIcon } from "../part/Parts";
@@ -13,6 +13,7 @@ import { ClientQuotationAdded } from "../../components/ClientQuotationAdded";
 
 export const ProviderQuotationDetails = () => {
   const quotationId = useLocation().pathname.split("/").pop()!;
+  const [purchaseOrderGenerated, setPurchaseOrderGenerated] = useState(false);
   const [date, setDate] = useState<string>("");
   const [quotation, setQuotation] = useState<ProviderQuotation | null>(null);
   const [quotationCode, setQuotationCode] = useState<string>("")
@@ -27,6 +28,7 @@ export const ProviderQuotationDetails = () => {
     const fetchQuotationDetails = async () => {
       const response = await getProviderQuotationById(quotationId);
       setDate(formatDate(response.quotation.createdAt));
+      setPurchaseOrderGenerated(response.purchaseOrderExists);
       setStateSelected(new Set([response.quotation.state]));
       setQuotation(response.quotation);
       setQuotationType(response.quotation.quotationType)
@@ -110,6 +112,34 @@ export const ProviderQuotationDetails = () => {
     setIsLoading(false)
   }
 
+  const handleGeneratePurchaseOrder = async () => {
+    setIsLoading(true);
+    const response = await generatePurchaseOrder(quotationId);
+    if (response && response.status === 200) {
+      addToast({
+        title: "Orden de compra generada",
+        description: "La orden de compra ha sido generada correctamente.",
+        color: "success",
+        timeout: 3000,
+      });
+      navigate("/dashboard/provider-quotes");
+    }
+    setIsLoading(false);
+  }
+
+  const buttonContent = (state: string) => {
+    if (state === "Aceptada" && quotation?.state === "Aceptada") {
+      if (isLoading) {
+        return "Generando OC...";
+      }
+      return "Generar OC";
+    }
+    if (isLoading) {
+      return "Guardando cambios...";
+    }
+    return "Guardar cambios";
+  }
+
   return (
     <main className="flex flex-col gap-4 h-full overflow-hidden">
       <div className="flex items-center justify-between w-full">
@@ -125,11 +155,19 @@ export const ProviderQuotationDetails = () => {
           </Button>
           <Button
             isLoading={isLoading}
+            isDisabled={quotation?.state === "Aceptada" && purchaseOrderGenerated}
             variant="solid"
             color="primary"
             className="w-full px-8"
+            onPress={() => {
+              if (Array.from(stateSelected)[0] === "Aceptada" && !purchaseOrderGenerated) {
+                handleGeneratePurchaseOrder();
+                return
+              }
+              handleSubmit();
+            }}
           >
-            {isLoading ? "Guardando..." : "Guardar cambios"}
+            {buttonContent(Array.from(stateSelected)[0] as string)}
           </Button>
         </div>
       </div>
@@ -145,6 +183,7 @@ export const ProviderQuotationDetails = () => {
             />
             <Select
               label="Estado"
+              isDisabled={quotation?.state === "Aceptada" && purchaseOrderGenerated}
               labelPlacement="outside"
               placeholder="Selecciona el nuevo estado"
               variant="bordered"
@@ -160,7 +199,7 @@ export const ProviderQuotationDetails = () => {
           <RadioGroup isReadOnly value={quotationType} onValueChange={setQuotationType} orientation="horizontal" isRequired label="Tipo de cotización" classNames={{
             label: "text-sm text-zinc-950",
             base: "flex flex-col gap-4",
-            wrapper: "grid grid-cols-2 gap-6 md:gap-6 w-[95%] md:w-2/3 ml-2 mb-2"
+            wrapper: "grid grid-cols-2 gap-6 md:gap-4 w-[95%] md:w-full ml-2 mb-2"
           }}>
             <Radio classNames={{
               label: "text-sm md:text-base",
@@ -235,12 +274,19 @@ export const ProviderQuotationDetails = () => {
         </Button>
         <Button
           isLoading={isLoading}
+          isDisabled={quotation?.state === "Aceptada" && purchaseOrderGenerated}
           variant="solid"
           color="primary"
           className="w-full"
-          onPress={handleSubmit}
+          onPress={() => {
+            if (Array.from(stateSelected)[0] === "Aceptada" && quotation?.state === "Aceptada" && !purchaseOrderGenerated) {
+              handleGeneratePurchaseOrder();
+              return
+            }
+            handleSubmit();
+          }}
         >
-          {isLoading ? "Guardando..." : "Guardar cambios"}
+          {buttonContent(Array.from(stateSelected)[0] as string)}
         </Button>
       </div>
     </main>

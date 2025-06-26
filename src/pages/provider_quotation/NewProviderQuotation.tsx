@@ -143,7 +143,7 @@ export const NewProviderQuotation = () => {
         <RadioGroup value={quotationType} onValueChange={setQuotationType} orientation="horizontal" isRequired label="Tipo de cotización" classNames={{
           label: "text-sm text-zinc-950",
           base: "flex flex-col gap-4",
-          wrapper: "grid grid-cols-2 gap-6 md:gap-6 w-[95%] md:w-2/3 ml-2 mb-2"
+          wrapper: "grid grid-cols-2 gap-6 md:gap-4 w-[95%] md:w-full ml-2 mb-2"
         }}>
           <Radio classNames={{
             label: "text-sm md:text-base",
