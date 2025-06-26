@@ -16,6 +16,7 @@ export const routes = [
   { name: "Partes", path: "parts" },
   { name: "Cotizaciones clientes", path: "client-quotes" },
   { name: "Cotizaciones proveedores", path: "provider-quotes" },
+  { name: "Órdenes de compra", path: "purchase-orders" },
   { name: "Clientes y proveedores", path: "clients-and-providers" },
 ];
 

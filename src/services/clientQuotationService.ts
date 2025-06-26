@@ -105,7 +105,16 @@ export const getClientQuotationByCode = async (quotationCode: string) => {
     );
     return response.data;
   } catch (error) {
-    console.error(error);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Problemas",
+          description: error.response.data.message,
+          color: "warning",
+          timeout: 3000,
+        });
+      }
+      throw error;
+    }  
   }
 };

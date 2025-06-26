@@ -60,3 +60,21 @@ export interface ProviderQuotation {
   state: "Aceptada" | "Cancelada" | "Pendiente";
   quotationType: "Exterior" | "Local";
 }
+
+export interface PurchaseOrder {
+  id?: number;
+  code: string;
+  providerQuotation: ProviderQuotation;
+  createdAt: string;
+  state:
+    | "Pend. Factura"
+    | "Pend. Envío"
+    | "Pend. Ingreso"
+    | "Pend. Aduana"
+    | "Finalizada";
+}
+
+export interface Quotation {
+  id?: number;
+  clientQuotation: ClientQuotation;
+}

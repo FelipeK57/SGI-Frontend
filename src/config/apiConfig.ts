@@ -9,5 +9,6 @@ export const ENDPOINT = {
   CLIENT_QUOTATIONS: `${URL}/client-quotation`,
   PROVIDER_QUOTATIONS: `${URL}/provider-quotation`,
   QUOTATION_PART: `${URL}/quotation-part`,
+  PURCHASE_ORDERS: `${URL}/purchase-order`,
   AUTH: `${API_URL}/external-systems-auth`,
 };
