@@ -78,3 +78,12 @@ export interface Quotation {
   id?: number;
   clientQuotation: ClientQuotation;
 }
+
+export interface PurchaseInvoice {
+  id?: number;
+  purchaseOrder: PurchaseOrder;
+  invoiceNumber: string;
+  date: string;
+  amount: number;
+  deliveryIncluded?: boolean;
+}
