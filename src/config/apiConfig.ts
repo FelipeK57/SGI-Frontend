@@ -10,5 +10,6 @@ export const ENDPOINT = {
   PROVIDER_QUOTATIONS: `${URL}/provider-quotation`,
   QUOTATION_PART: `${URL}/quotation-part`,
   PURCHASE_ORDERS: `${URL}/purchase-order`,
+  PURCHASE_INVOICES: `${URL}/purchase-invoice`,
   AUTH: `${API_URL}/external-systems-auth`,
 };
