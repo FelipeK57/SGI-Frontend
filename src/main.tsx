@@ -23,6 +23,7 @@ import { NewProviderQuotation } from "./pages/provider_quotation/NewProviderQuot
 import { ProviderQuotationDetails } from "./pages/provider_quotation/ProviderQuotationDetails.tsx";
 import { PurchaseOrders } from "./pages/purchase_orders/PurchaseOrders.tsx";
 import { PurchaseOrderDetails } from "./pages/purchase_orders/PurchaseOrderDetails.tsx";
+import { PartsIntake } from "./pages/parts_intake/PartsIntake.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -39,12 +40,25 @@ createRoot(document.getElementById("root")!).render(
           <Route path="parts/:partId" element={<DetailsPart />} />
           <Route path="client-quotes" element={<ClientQuotations />} />
           <Route path="client-quotes/new" element={<NewClientQuotation />} />
-          <Route path="client-quotes/:quotationId" element={<ClientQuotationDetails />} />
+          <Route
+            path="client-quotes/:quotationId"
+            element={<ClientQuotationDetails />}
+          />
           <Route path="provider-quotes" element={<ProviderQuotations />} />
-          <Route path="provider-quotes/new" element={<NewProviderQuotation />} />
-          <Route path="provider-quotes/:quotationId" element={<ProviderQuotationDetails />} />
+          <Route
+            path="provider-quotes/new"
+            element={<NewProviderQuotation />}
+          />
+          <Route
+            path="provider-quotes/:quotationId"
+            element={<ProviderQuotationDetails />}
+          />
           <Route path="purchase-orders" element={<PurchaseOrders />} />
-          <Route path="purchase-orders/:purchaseOrderId" element={<PurchaseOrderDetails />} />
+          <Route
+            path="purchase-orders/:purchaseOrderId"
+            element={<PurchaseOrderDetails />}
+          />
+          <Route path="parts-intake/:purchaseOrderId" element={<PartsIntake />} />
           <Route
             path="clients-and-providers"
             element={
