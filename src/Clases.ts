@@ -87,3 +87,13 @@ export interface PurchaseInvoice {
   amount: number;
   deliveryIncluded?: boolean;
 }
+
+export interface QuotationPart {
+  id?: number;
+  clientQuotationId: number;
+  partId: number;
+  quantity: number;
+  receivedQuantity?: number;
+  unitPrice: number;
+  totalPrice?: number;
+}
