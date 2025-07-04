@@ -69,8 +69,9 @@ export interface PurchaseOrder {
   state:
     | "Pend. Factura"
     | "Pend. Envío"
-    | "Pend. Ingreso"
     | "Pend. Aduana"
+    | "Pend. Entrega"
+    | "Pend. Ingreso"
     | "Finalizada";
 }
 
@@ -86,6 +87,32 @@ export interface PurchaseInvoice {
   date: string;
   amount: number;
   deliveryIncluded?: boolean;
+  currency: string;
+  deliveryAmount?: number;
+}
+
+export interface Delivery {
+  id?: number;
+  deliveryNumber: string;
+  purchaseOrder: PurchaseOrder;
+  carrier: string;
+  trackerNumber: string;
+  deliveryDate: string;
+  estimatedDeliveryDate: string;
+  purchaseOrderId?: number;
+  cost: number;
+}
+
+export interface Aduana {
+  id?: number;
+  purchaseOrder: PurchaseOrder;
+  purchaseOrderId?: number;
+  declarationNumber: string;
+  declarationDate: string;
+  agencyName: string;
+  agencyContact: string;
+  amount: number;
+  releaseDate: string;
 }
 
 export interface QuotationPart {
