@@ -11,5 +11,7 @@ export const ENDPOINT = {
   QUOTATION_PART: `${URL}/quotation-part`,
   PURCHASE_ORDERS: `${URL}/purchase-order`,
   PURCHASE_INVOICES: `${URL}/purchase-invoice`,
+  DELIVERY: `${URL}/delivery`,
+  ADUANA: `${URL}/aduana`,
   AUTH: `${API_URL}/external-systems-auth`,
 };
