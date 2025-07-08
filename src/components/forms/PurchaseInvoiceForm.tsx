@@ -56,13 +56,13 @@ export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, delive
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-sm mx-auto">
+    <div className="flex flex-col gap-2 h-full items-center overflow-y-auto">
       <h2 className="font-semibold">
         Registro de la factura del proveedor
       </h2>
       <Form
         onSubmit={purchaseInvoiceHandleSubmit}
-        className="flex flex-col gap-4 w-full"
+        className="flex flex-col gap-4 w-full max-w-sm"
       >
         <Input
           label="Número de factura"

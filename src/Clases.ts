@@ -118,7 +118,9 @@ export interface Aduana {
 export interface QuotationPart {
   id?: number;
   clientQuotationId: number;
+  clientQuotation: ClientQuotation;
   partId: number;
+  part: Part;
   quantity: number;
   receivedQuantity?: number;
   unitPrice: number;

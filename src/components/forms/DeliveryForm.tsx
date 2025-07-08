@@ -51,9 +51,9 @@ export const DeliveryForm = ({ purchaseOrder, delivery, setDelivery, reload, set
   }
 
   return (
-    <div className="flex flex-col gap-2 max-w-sm mx-auto h-full overflow-y-auto">
+    <div className="flex flex-col gap-2 h-full items-center overflow-y-auto">
       <h2 className="font-semibold">Registro de la factura de envío internacional</h2>
-      <Form onSubmit={deliveryHandleSubmit} className="flex flex-col gap-4 w-full">
+      <Form onSubmit={deliveryHandleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
         <Input
           value={delivery?.deliveryNumber}
           onChange={(e) =>

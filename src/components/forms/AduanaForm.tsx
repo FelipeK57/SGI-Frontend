@@ -50,11 +50,11 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-sm mx-auto h-full overflow-y-auto">
+    <div className="flex flex-col gap-2 h-full items-center overflow-y-auto">
       <h2 className="font-semibold">Registro de pago a aduana</h2>
       <Form
         onSubmit={aduanaHandleSubmit}
-        className="flex flex-col gap-4 w-full"
+        className="flex flex-col gap-4 w-full max-w-sm"
       >
         <Input
           label="Número de declaración"
