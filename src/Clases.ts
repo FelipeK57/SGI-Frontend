@@ -118,9 +118,24 @@ export interface Aduana {
 export interface QuotationPart {
   id?: number;
   clientQuotationId: number;
+  clientQuotation: ClientQuotation;
   partId: number;
+  part: Part;
   quantity: number;
   receivedQuantity?: number;
   unitPrice: number;
   totalPrice?: number;
+}
+
+export interface LocalShipping {
+  id?: number;
+  purchaseOrder: PurchaseOrder;
+  purchaseOrderId?: number;
+  dispatchNumber: string;
+  localCarrier: string;
+  localTrackingNumber: string;
+  originAddress: string;
+  deliveryDate: string;
+  amount: number;
+  localCarrierInvoiceNumber: string;
 }

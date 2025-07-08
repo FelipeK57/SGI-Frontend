@@ -6,13 +6,14 @@ import {
 import { useNavigate } from "react-router";
 import { ArrowLeftIcon } from "../part/DetailsPart";
 import { useEffect, useState } from "react";
-import type { Aduana, Delivery, PurchaseInvoice, PurchaseOrder, Quotation } from "../../Clases";
+import type { Aduana, Delivery, LocalShipping, PurchaseInvoice, PurchaseOrder, Quotation } from "../../Clases";
 import { getPurchaseOrderById } from "../../services/purchaseOrderService";
 import { getStateColorPurchaseOrder } from "../../components/PurchaseOrderRow";
 import { DetailsPurchaseOrder } from "../../components/DetailsPurchaseOrder";
 import { PurchaseInvoiceForm } from "../../components/forms/PurchaseInvoiceForm";
 import { DeliveryForm } from "../../components/forms/DeliveryForm";
 import { AduanaForm } from "../../components/forms/AduanaForm";
+import { LocalShippingForm } from "../../components/forms/LocalShippingForm";
 
 export const PurchaseOrderDetails = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export const PurchaseOrderDetails = () => {
   const [invoice, setInvoice] = useState<PurchaseInvoice | null>(null);
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [aduana, setAduana] = useState<Aduana | null>(null);
+  const [localShipping, setLocalShipping] = useState<LocalShipping | null>(null);
   const [reload, setReload] = useState(false);
   const [deliveryIncluded, setDeliveryIncluded] = useState<boolean>(false);
 
@@ -35,6 +37,7 @@ export const PurchaseOrderDetails = () => {
       setInvoice(response.invoice);
       setDelivery(response.delivery);
       setAduana(response.aduana);
+      setLocalShipping(response.localShipping);
     };
 
     fetchData();
@@ -129,9 +132,15 @@ export const PurchaseOrderDetails = () => {
             )
           }
           {
-            purchaseOrder?.state === "Pend. Entrega" && (
+            (localShipping || purchaseOrder?.state === "Pend. Entrega") && (
               <Tab key="delivery" title="Entrega">
-                <h2 className="font-semibold">Entrega</h2>
+                <LocalShippingForm
+                  purchaseOrder={purchaseOrder as PurchaseOrder}
+                  localShipping={localShipping as LocalShipping}
+                  setLocalShipping={setLocalShipping}
+                  reload={reload}
+                  setReload={setReload}
+                />
               </Tab>
             )
           }

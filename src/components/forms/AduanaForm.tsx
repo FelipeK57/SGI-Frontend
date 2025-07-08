@@ -3,7 +3,6 @@ import type { PurchaseOrder, Aduana } from "../../Clases";
 import { updateAduana, createAduana } from "../../services/aduanaService";
 import { parseDate } from "@internationalized/date";
 
-
 interface AduanaFormProps {
   purchaseOrder: PurchaseOrder;
   aduana?: Aduana;
@@ -13,7 +12,6 @@ interface AduanaFormProps {
 }
 
 export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload }: AduanaFormProps) => {
-
   const aduanaHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (aduana) {
@@ -52,16 +50,17 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-sm mx-auto h-full overflow-y-auto">
+    <div className="flex flex-col gap-2 h-full items-center overflow-y-auto">
       <h2 className="font-semibold">Registro de pago a aduana</h2>
       <Form
         onSubmit={aduanaHandleSubmit}
-        className="flex flex-col gap-4 w-full"
+        className="flex flex-col gap-4 w-full max-w-sm"
       >
         <Input
           label="Número de declaración"
           value={aduana?.declarationNumber}
           onChange={(e) =>
+            aduana &&
             setAduana({
               ...aduana,
               declarationNumber: e.target.value,
@@ -81,6 +80,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           }
           name="declarationDate"
           onChange={(date) =>
+            aduana &&
             setAduana({
               ...aduana,
               declarationDate: date ? date.toString() : "",
@@ -95,6 +95,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           label="Nombre de la agencia aduanera"
           value={aduana?.agencyName}
           onChange={(e) =>
+            aduana &&
             setAduana({
               ...aduana,
               agencyName: e.target.value,
@@ -110,6 +111,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           label="Contacto de la agencia aduanera"
           value={aduana?.agencyContact}
           onChange={(e) =>
+            aduana &&
             setAduana({
               ...aduana,
               agencyContact: e.target.value,
@@ -126,6 +128,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           label="Total de impuestos pagados"
           value={aduana?.amount}
           onValueChange={(value) =>
+            aduana &&
             setAduana({
               ...aduana,
               amount: value as number,
@@ -147,6 +150,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           }
           name="releaseDate"
           onChange={(date) =>
+            aduana &&
             setAduana({
               ...aduana,
               releaseDate: date ? date.toString() : "",
@@ -158,6 +162,7 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           isRequired
         />
         <Button
+          isDisabled={purchaseOrder?.state !== "Pend. Aduana" && purchaseOrder?.state !== "Pend. Entrega"}
           color="primary"
           className="w-full"
           type="submit"

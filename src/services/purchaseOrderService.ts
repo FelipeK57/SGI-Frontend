@@ -19,13 +19,13 @@ export const getPurchaseOrderById = async (purchaseOrderId: string) => {
   }
 };
 
-export const getQuotationParts = async (purchaseOrderId: string) => {
-  try {
-    const response = await axios.get(
-      `${ENDPOINT.PURCHASE_ORDERS}/quotation-parts/${purchaseOrderId}`
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const getQuotationParts = async (purchaseOrderId: string) => {
+//   try {
+//     const response = await axios.get(
+//       `${ENDPOINT.PURCHASE_ORDERS}/quotation-parts/${purchaseOrderId}`
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };

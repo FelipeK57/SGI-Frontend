@@ -76,7 +76,7 @@ export const NewPart = () => {
           <Input onChange={handleImageChange} isRequired type="file" name="partImage" label="Imagen" placeholder="Selecciona una imagen" labelPlacement="outside" variant="bordered" />
           <div className="flex flex-col gap-1">
             <span className="text-xs hidden sm:block">Vista previa</span>
-            <img src={imagePreview || "/default.png"} alt="Vista previa" className="hidden sm:block w-full aspect-square bg-zinc-50 object-contain p-2 rounded-md" />
+            <img src={imagePreview || "/default.png"} alt="Vista previa" className="hidden sm:block w-full aspect-square bg-zinc-100 object-contain p-2 rounded-md" />
           </div>
         </div>
         <div className="block md:hidden w-full">

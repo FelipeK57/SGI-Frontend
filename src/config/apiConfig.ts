@@ -13,5 +13,7 @@ export const ENDPOINT = {
   PURCHASE_INVOICES: `${URL}/purchase-invoice`,
   DELIVERY: `${URL}/delivery`,
   ADUANA: `${URL}/aduana`,
+  LOCAL_SHIPPING: `${URL}/local-shipping`,
+  PARTS_INTAKE: `${URL}/parts-intake`,
   AUTH: `${API_URL}/external-systems-auth`,
 };

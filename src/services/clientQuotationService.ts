@@ -98,6 +98,16 @@ export const deleteQuotationPart = async (quotationId: string) => {
   }
 };
 
+export const getQuotationParts = async (purchaseOrderId: string) => {
+  try {
+    const response = await axios.get(`${ENDPOINT.QUOTATION_PART}/${purchaseOrderId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getClientQuotationByCode = async (quotationCode: string) => {
   try {
     const response = await axios.get(
