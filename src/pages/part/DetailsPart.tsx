@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import type { Part, OutputPart } from "../../Clases";
-import { fetchPart, outputsParts } from "../../services/partService";
+import type { Part, OutputPart, UnitPart, UnitsPendingIntake } from "../../Clases";
+import { fetchPart, getUnitsPart, getUnitsPartPendingIntake, outputsParts } from "../../services/partService";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { useAuth } from "../../store/useAuth";
 import { RecentOutputPart } from "../../components/RecentOutputPart";
+import { UnitPartRow } from "../../components/UnitPart";
+import { UnitPendingIntake } from "../../components/UnitPendingIntake";
 
 export const DetailsPart = () => {
   const [part, setPart] = useState<Part | null>(null);
+  const [units, setUnits] = useState<UnitPart[]>([]);
   const [outputs, setOutputs] = useState<OutputPart[] | []>([]);
+  const [unitsPendingIntake, setUnitsPendingIntake] = useState<UnitsPendingIntake[] | []>([]);
   const navigate = useNavigate();
   const partId = useLocation().pathname.split("/").pop();
   const { role } = useAuth();
@@ -24,6 +28,18 @@ export const DetailsPart = () => {
       setOutputs(partData.outputs);
     };
 
+    const fetchUnitsPartData = async () => {
+      const partData = await getUnitsPart(partId as string)
+      setUnits(partData.unitParts);
+    }
+
+    const fetchUnitsPartPendingIntake = async () => {
+      const partData = await getUnitsPartPendingIntake(partId as string);
+      setUnitsPendingIntake(partData.units);
+    }
+
+    fetchUnitsPartPendingIntake();
+    fetchUnitsPartData();
     fetchOutputPartData();
     fetchPartData();
   }, []);
@@ -71,13 +87,13 @@ export const DetailsPart = () => {
             <DetailPart part={part} />
           </Tab>
           <Tab key="stock" title="Unidades">
-            <UnitsPart />
+            <UnitsPart units={units} />
           </Tab>
           <Tab key="output-history" title="Historial de salidas">
             <RecentOuputs outputs={outputs} />
           </Tab>
           <Tab key="pending-input" title="Pendientes de ingreso">
-            <IntakePending />
+            <IntakePending unitsPendingIntake={unitsPendingIntake} />
           </Tab>
         </Tabs>
       </div>
@@ -92,13 +108,13 @@ export const DetailsPart = () => {
           aria-label="Options"
         >
           <Tab key="stock" title="Unidades">
-            <UnitsPart />
+            <UnitsPart units={units} />
           </Tab>
           <Tab key="output-history" title="Historial de salidas">
             <RecentOuputs outputs={outputs} />
           </Tab>
           <Tab key="pending-input" title="Pendientes de ingreso">
-            <IntakePending />
+            <IntakePending unitsPendingIntake={unitsPendingIntake} />
           </Tab>
         </Tabs>
       </div>
@@ -135,12 +151,30 @@ export const DetailPart = ({ part }: { part: Part }) => {
   );
 };
 
-export const UnitsPart = () => {
-  return (
-    <div className="flex items-center justify-center">
-      <p className="text-zinc-500 text-sm font-light">
-        Units part is not implemented yet. Please check back later.
+interface UnitsPartProps {
+  units: UnitPart[];
+}
+export const UnitsPart = ({ units }: UnitsPartProps) => {
+  if (units.length === 0) {
+    return (
+      <p className="w-full text-center p-2 text-zinc-500 text-sm font-light">
+        No hay unidades
       </p>
+    );
+  }
+  return (
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+        <p>Serial</p>
+        <p className="hidden md:block">Fecha</p>
+        <p>OC</p>
+        <p>COT</p>
+      </div>
+      <div>
+        {units.map((unit) => (
+          <UnitPartRow key={unit.id} unit={unit} />
+        ))}
+      </div>
     </div>
   );
 };
@@ -159,7 +193,7 @@ export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
 
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-50 sticky top-0 z-10">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
         <p>Serial</p>
         <p className="hidden md:block">Fecha</p>
         <p>Cliente</p>
@@ -174,12 +208,33 @@ export const RecentOuputs = ({ outputs }: RecentOutputsProps) => {
   );
 };
 
-export const IntakePending = () => {
-  return (
-    <div className="flex items-center justify-center">
-      <p className="text-zinc-500 text-sm font-light">
-        Intake pending is not implemented yet. Please check back later.
+interface IntakePendingProps {
+  unitsPendingIntake: UnitsPendingIntake[];
+}
+
+export const IntakePending = ({ unitsPendingIntake }: IntakePendingProps) => {
+  if (unitsPendingIntake.length === 0) {
+    return (
+      <p className="w-full text-center p-2 text-zinc-500 text-sm font-light">
+        No hay pendientes de ingreso
       </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="grid grid-cols-4 md:grid-cols-5 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+        <p>Cliente</p>
+        <p className="hidden md:block">Fecha</p>
+        <p>Cantidad</p>
+        <p>OC</p>
+        <p>COT</p>
+      </div>
+      <div>
+        {unitsPendingIntake.map((unitPendingIntake) => (
+          <UnitPendingIntake unitPendingIntake={unitPendingIntake} key={unitPendingIntake.id} />
+        ))}
+      </div>
     </div>
   );
 };

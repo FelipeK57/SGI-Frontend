@@ -194,7 +194,7 @@ export const LocalShippingForm = ({
           variant="bordered"
           isRequired
         />
-        <Button type="submit" color="primary" className="w-full">
+        <Button type="submit" color="primary" className="w-full" isDisabled={purchaseOrder.state === "Finalizada"}>
           {localShipping ? "Actualizar envío local" : "Crear envío local"}
         </Button>
       </Form>

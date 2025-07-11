@@ -22,6 +22,7 @@ export const ProviderQuotationDetails = () => {
   const [quotationType, setQuotationType] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false);
   const [stateSelected, setStateSelected] = useState<Selection>(new Set());
+  const [reload, setReload] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const ProviderQuotationDetails = () => {
       );
     };
     fetchQuotationDetails();
-  }, [quotationId]);
+  }, [quotationId, reload]);
 
   const handleClientQuotation = async (quotationCode: string) => {
     const response = await getClientQuotationByCode(quotationCode);;
@@ -107,7 +108,7 @@ export const ProviderQuotationDetails = () => {
         color: "success",
         timeout: 3000,
       });
-      navigate("/dashboard/provider-quotes");
+      setReload(!reload);
     }
     setIsLoading(false)
   }
@@ -160,7 +161,7 @@ export const ProviderQuotationDetails = () => {
             color="primary"
             className="w-full px-8"
             onPress={() => {
-              if (Array.from(stateSelected)[0] === "Aceptada" && !purchaseOrderGenerated) {
+              if (Array.from(stateSelected)[0] === "Aceptada" && quotation?.state === "Aceptada" && !purchaseOrderGenerated) {
                 handleGeneratePurchaseOrder();
                 return
               }

@@ -61,10 +61,34 @@ export const outputsParts = async (partId: number) => {
 
 export const getPartByNumber = async (partNumber: string) => {
   try {
-    const response = await axios.get(`${ENDPOINT.PARTS}/part-number/${partNumber}`);
+    const response = await axios.get(
+      `${ENDPOINT.PARTS}/part-number/${partNumber}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching part by number:", error);
+    throw error;
+  }
+};
+
+export const getUnitsPart = async (partId: string) => {
+  try {
+    const response = await axios.get(`${ENDPOINT.PARTS}/units-part/${partId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching units part:", error);
+    throw error;
+  }
+};
+
+export const getUnitsPartPendingIntake = async (partId: string) => {
+  try {
+    const response = await axios.get(
+      `${ENDPOINT.PARTS}/pending-intake/${partId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching units part pending intake:", error);
     throw error;
   }
 };

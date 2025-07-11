@@ -139,3 +139,58 @@ export interface LocalShipping {
   amount: number;
   localCarrierInvoiceNumber: string;
 }
+
+export interface UnitPart {
+  id?: number;
+  serial: string;
+  partId: number;
+  part: Part;
+  intake?: {
+    id?: number;
+    purchaseOrder: PurchaseOrder;
+    purchaseOrderId?: number;
+    quotationPart: QuotationPart;
+  };
+  intakeId?: number | null;
+  outputId?: number | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PartOutput {
+  part?: Part;
+  partId: number;
+  serial: string;
+}
+
+export interface NewOutput {
+  id?: number;
+  clientId: number;
+  type: string;
+  returnDate?: string;
+  saleValue?: number;
+  parts: PartOutput[];
+}
+
+export interface UnitsPendingIntake {
+  id?: number;
+  part?: Part;
+  quantity: number;
+  clientQuotation?: {
+    id?: number;
+    code: string;
+    client: Client;
+    quotations: {
+      id?: number;
+      providerQuotation: {
+        id?: number;
+        purchaseOrder: {
+          id?: number;
+          code: string;
+          date: string;
+          state: "Pend. Ingreso";
+        };
+      };
+    };
+  };
+}

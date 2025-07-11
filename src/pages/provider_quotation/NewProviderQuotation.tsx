@@ -9,6 +9,7 @@ import { ClientQuotationFound } from "../../components/ClientQuotationFound"
 import { ClientQuotationAdded } from "../../components/ClientQuotationAdded"
 import { useNavigate } from "react-router"
 import { createProviderQuotation } from "../../services/providerQuotationService"
+import { useReload } from "../../context/ClientProviderContext"
 
 // export interface QuotationFound {
 //   quotation: ClientQuotation
@@ -31,14 +32,16 @@ export const NewProviderQuotation = () => {
   const [quotationType, setQuotationType] = useState<string>("")
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const { reload, setReload } = useReload()
 
   useEffect(() => {
     const getProviders = async () => {
       const response = await fetchProviders()
       setProviders(response.providers)
+      setReload(!reload)
     }
     getProviders()
-  }, [])
+  }, [reload])
 
   const handleSelectionChange = (key: Key | null) => {
     if (!key) {

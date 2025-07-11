@@ -74,7 +74,7 @@ export const ProviderQuotations = () => {
                 <p>Estado</p>
                 <p className="hidden md:block">Tipo de compra</p>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 {
                   providerQuotationsFiltered.map((quotation) => (
                     <ProviderQuotationRow key={quotation.id} quotation={quotation} />

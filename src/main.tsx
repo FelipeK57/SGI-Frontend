@@ -24,6 +24,8 @@ import { ProviderQuotationDetails } from "./pages/provider_quotation/ProviderQuo
 import { PurchaseOrders } from "./pages/purchase_orders/PurchaseOrders.tsx";
 import { PurchaseOrderDetails } from "./pages/purchase_orders/PurchaseOrderDetails.tsx";
 import { PartsIntake } from "./pages/parts_intake/PartsIntake.tsx";
+import { NewOutputForm } from "./pages/outputs/NewOutputForm.tsx";
+import { Outputs } from "./pages/outputs/Outputs.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -39,7 +41,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="parts/:partId/edit" element={<EditPart />} />
           <Route path="parts/:partId" element={<DetailsPart />} />
           <Route path="client-quotes" element={<ClientQuotations />} />
-          <Route path="client-quotes/new" element={<NewClientQuotation />} />
+          <Route path="client-quotes/new" element={<ReloadProvider><NewClientQuotation /></ReloadProvider>} />
           <Route
             path="client-quotes/:quotationId"
             element={<ClientQuotationDetails />}
@@ -47,7 +49,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="provider-quotes" element={<ProviderQuotations />} />
           <Route
             path="provider-quotes/new"
-            element={<NewProviderQuotation />}
+            element={<ReloadProvider><NewProviderQuotation /></ReloadProvider>}
           />
           <Route
             path="provider-quotes/:quotationId"
@@ -71,6 +73,8 @@ createRoot(document.getElementById("root")!).render(
             <Route index path="clients" element={<Clients />} />
             <Route path="providers" element={<Providers />} />
           </Route>
+          <Route path="outputs" element={<Outputs />} />
+          <Route path="outputs/new" element={<NewOutputForm />} />
         </Route>
         <Route
           path="*"
