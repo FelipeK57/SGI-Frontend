@@ -18,6 +18,7 @@ export const routes = [
   { name: "Cotizaciones proveedores", path: "provider-quotes" },
   { name: "Órdenes de compra", path: "purchase-orders" },
   { name: "Clientes y proveedores", path: "clients-and-providers" },
+  { name: "Salida de partes", path: "outputs" },
 ];
 
 export const selectedRouteStyle = (path: string) => {

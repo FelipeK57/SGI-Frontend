@@ -39,7 +39,7 @@ export const PurchaseOrders = () => {
               <p>Estado</p>
               <p className="hidden md:block">Tipo de compra</p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
               {
                 purchaseOrders.map((purchaseOrder) => (
                   <PurchaseOrderRow key={purchaseOrder.id} purchaseOrder={purchaseOrder} />

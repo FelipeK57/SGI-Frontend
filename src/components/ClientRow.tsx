@@ -58,7 +58,7 @@ export const ClientRow = ({ client, reload, setReload }: ClientRowProps) => {
     <>
       <div
         onClick={onOpen}
-        className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
+        className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 py-4 px-2 w-full text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
         key={client.id}
       >
         <p>{client.name}</p>

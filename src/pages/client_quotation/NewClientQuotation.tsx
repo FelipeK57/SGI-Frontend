@@ -14,6 +14,7 @@ import { getPartByNumber } from "../../services/partService";
 import { PartFound } from "../../components/PartFound";
 import { QuotePart } from "../../components/QuotePart";
 import { createClientQuotation } from "../../services/clientQuotationService";
+import { useReload } from "../../context/ClientProviderContext";
 
 export interface PartAdded {
   id?: string;
@@ -32,14 +33,16 @@ export const NewClientQuotation = () => {
   const [partsFound, setPartsFound] = useState<Part[]>([]);
   const [partsAdded, setPartsAdded] = useState<PartAdded[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { reload, setReload } = useReload();
 
   useEffect(() => {
     const getClients = async () => {
       const data = await fetchClients();
       setClients(data.clients);
+      setReload(!reload)
     };
     getClients();
-  }, []);
+  }, [reload]);
 
   const handleSearchPart = async (partNumber: string) => {
     const data = await getPartByNumber(partNumber);

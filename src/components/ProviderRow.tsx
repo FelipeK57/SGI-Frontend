@@ -61,7 +61,7 @@ export const ProviderRow = ({
     <>
       <div
         onClick={onOpen}
-        className="grid grid-cols-[30%_1fr] md:grid-cols-3 gap-3 w-full border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
+        className="grid grid-cols-[30%_1fr] md:grid-cols-3 gap-3 w-full border-b-1 py-4 px-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
         key={provider.id}
       >
         <p>{provider.name}</p>

@@ -15,5 +15,7 @@ export const ENDPOINT = {
   ADUANA: `${URL}/aduana`,
   LOCAL_SHIPPING: `${URL}/local-shipping`,
   PARTS_INTAKE: `${URL}/parts-intake`,
+  UNITS_PART: `${URL}/units-part`,
+  OUTPUT_PART: `${URL}/output`,
   AUTH: `${API_URL}/external-systems-auth`,
 };
