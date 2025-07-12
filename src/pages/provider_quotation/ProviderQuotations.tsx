@@ -83,8 +83,10 @@ export const ProviderQuotations = () => {
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-gray-500">No hay cotizaciones de proveedores registradas.</p>
+            <div className="col-span-full flex items-center justify-center">
+              <p className="text-zinc-500 text-sm font-light">
+                No hay cotizaciones disponibles
+              </p>
             </div>
           )
         }

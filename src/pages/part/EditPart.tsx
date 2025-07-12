@@ -133,12 +133,13 @@ export const EditPart = () => {
               )
             }
             isRequired
-            maxLength={200}
+            maxLength={500}
             classNames={{
               input: "min-h-14 max-h-14 sm:min-h-36 sm:max-h-36",
             }}
             name="description"
             label="Descripción"
+            description={`${partData?.description.length}/500`}
             placeholder="Ingresa la descripción"
             labelPlacement="outside"
             variant="bordered"
@@ -150,7 +151,7 @@ export const EditPart = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2 w-full">
-          <Input onChange={handleImageChange} isRequired type="file" name="partImage" label="Imagen" placeholder="Selecciona una imagen" labelPlacement="outside" variant="bordered" />
+          <Input onChange={handleImageChange} type="file" name="partImage" label="Imagen" placeholder="Selecciona una imagen" labelPlacement="outside" variant="bordered" />
           <div className="flex flex-col gap-1">
             <span className="text-xs hidden sm:block">Vista previa</span>
             <img src={imagePreview || `${partData?.image}`} alt="Vista previa" className="hidden sm:block w-full aspect-square bg-zinc-100 object-contain p-2 rounded-md" />

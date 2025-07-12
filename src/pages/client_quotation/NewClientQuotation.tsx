@@ -119,7 +119,7 @@ export const NewClientQuotation = () => {
       selectedClient as number,
       partsAdded
     );
-    if (response?.status === 201) {
+    if (response && response.status === 201) {
       navigate("/dashboard/client-quotes");
       addToast({
         title: "Cotización creada",

@@ -1,4 +1,4 @@
-import { Button, Input } from "@heroui/react";
+import { Button, NumberInput } from "@heroui/react";
 import type { Part } from "../Clases";
 import { useState } from "react";
 import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
@@ -48,17 +48,18 @@ export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPar
         <p className="font-semibold">{part.name}</p>
         <p className="text-xs text-zinc-500">{part.partNumber}</p>
         <p className="text-xs text-zinc-500">{part.producer}</p>
-        <Input
+        <NumberInput
           label="Precio unitario"
           labelPlacement="outside"
           placeholder="0"
           variant="bordered"
           type="number"
           className="max-w-36"
+          minValue={0}
+          step={1000}
           startContent={<p className="text-zinc-400">$</p>}
-          value={priceUnit.toString()}
-          onChange={(e) => {
-            const value = Number(e.target.value);
+          value={priceUnit}
+          onValueChange={(value: number) => {
             setPriceUnit(value);
             onPriceUnitChange(part, value);
           }}

@@ -176,6 +176,7 @@ export interface UnitsPendingIntake {
   id?: number;
   part?: Part;
   quantity: number;
+  receivedQuantity?: number;
   clientQuotation?: {
     id?: number;
     code: string;
