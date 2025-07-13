@@ -1,17 +1,10 @@
-import { Outlet } from "react-router"
-import { Sidebar } from "./components/Sidebar"
-import { SidebarDesktop } from "./components/SidebarDesktop"
+import { Button } from "@heroui/react"
 
 export const App = () => {
   return (
-    <main className="flex flex-col lg:flex-row h-screen">
-      <nav className="flex w-full items-center px-7 py-2 border-b-1 border-zinc-200 lg:hidden">
-        <Sidebar />
-      </nav>
-      <SidebarDesktop />
-      <main className="overflow-y-hidden w-full px-7 py-2 md:py-5">
-        <Outlet />
-      </main>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-4xl font-bold mb-4">Welcome to My App</h1>
+      <Button color="primary">Press me!</Button>
     </main>
   )
 }
