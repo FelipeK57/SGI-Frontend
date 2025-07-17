@@ -34,7 +34,7 @@ export const DetailsPurchaseOrder = ({ purchaseOrder, quotations }: DetailsPurch
               to={`/dashboard/client-quotes/${quotation.clientQuotation.id}`}
               target="_blank"
               key={quotation.id}
-              className="flex flex-col gap-2 p-4 border-1 rounded-md md:h-fit hover:bg-zinc-50 transition-all hover:scale-95"
+              className="flex flex-col gap-2 p-4 border-1 rounded-md md:h-fit hover:bg-zinc-50 transition-all active:scale-95"
             >
               <p className="font-semibold">
                 <span className="font-normal">Código: </span>

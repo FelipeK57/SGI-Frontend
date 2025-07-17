@@ -35,11 +35,17 @@ export const NewClientQuotation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { reload, setReload } = useReload();
 
+  // Errors
+  const [errors, setErrors] = useState({
+    errorSelectClient: null as string | null,
+    errorPartsAdded: null as string | null,
+  });
+
   useEffect(() => {
     const getClients = async () => {
       const data = await fetchClients();
       setClients(data.clients);
-      setReload(!reload)
+      setReload(!reload);
     };
     getClients();
   }, [reload]);
@@ -80,10 +86,10 @@ export const NewClientQuotation = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-            ...p,
-            quantity,
-            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
-          }
+              ...p,
+              quantity,
+              totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+            }
           : p
       )
     );
@@ -94,10 +100,10 @@ export const NewClientQuotation = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-            ...p,
-            unitPrice: priceUnit,
-            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
-          }
+              ...p,
+              unitPrice: priceUnit,
+              totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+            }
           : p
       )
     );
@@ -115,6 +121,24 @@ export const NewClientQuotation = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    if (!selectedClient) {
+      setErrors((prev) => ({
+        ...prev,
+        errorSelectClient: "Por favor, selecciona un cliente",
+      }));
+    }
+    if (partsAdded.length === 0) {
+      setErrors((prev) => ({
+        ...prev,
+        errorPartsAdded: "Por favor, agrega al menos una parte",
+      }));
+    }
+
+    if (!selectedClient || partsAdded.length === 0) {
+      setIsLoading(false);
+      return;
+    }
+
     const response = await createClientQuotation(
       selectedClient as number,
       partsAdded
@@ -180,7 +204,15 @@ export const NewClientQuotation = () => {
             startContent={<SearchIcon />}
             selectorIcon={<SelectorIcon />}
             isRequired
-            onSelectionChange={handleSelectionChange}
+            onSelectionChange={(client) => {
+              handleSelectionChange(client);
+              setErrors((prev) => ({
+                ...prev,
+                errorSelectClient: null,
+              }));
+            }}
+            errorMessage={errors.errorSelectClient}
+            isInvalid={errors.errorSelectClient !== null}
           >
             {(client) => (
               <AutocompleteItem key={client.id}>{client.name}</AutocompleteItem>
@@ -237,13 +269,18 @@ export const NewClientQuotation = () => {
           )}
         </div>
         <div className="flex flex-col gap-2 h-full overflow-hidden">
-          <p className="text-sm">Partes agregadas</p>
-          <p className="font-semibold">
-            Total: $
-            {partsAdded.reduce((acc, part) => acc + (part.totalPrice || 0), 0)}
-          </p>
+          <p className="text-sm">Partes agregadas:</p>
+          {partsAdded && partsAdded.length > 0 && (
+            <p className="font-semibold">
+              Total: $
+              {partsAdded.reduce(
+                (acc, part) => acc + (part.totalPrice || 0),
+                0
+              )}
+            </p>
+          )}
           <div className="flex flex-col gap-2 h-full overflow-y-auto">
-            {partsAdded.length > 0 && (
+            {partsAdded.length > 0 ? (
               <div className="flex flex-col gap-2">
                 {partsAdded.map((part) => (
                   <QuotePart
@@ -254,6 +291,16 @@ export const NewClientQuotation = () => {
                     onPriceUnitChange={handlePriceUnitChange}
                   />
                 ))}
+              </div>
+            ) : (
+              <div className="flex flex-col w-full items-center justify-center">
+                <p
+                  className={`text-zinc-500 text-xs ${
+                    errors.errorPartsAdded !== null && "text-rose-600"
+                  }`}
+                >
+                  No hay partes agregadas
+                </p>
               </div>
             )}
           </div>

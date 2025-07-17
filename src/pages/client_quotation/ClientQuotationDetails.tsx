@@ -46,6 +46,9 @@ export const ClientQuotationDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [stateSelected, setStateSelected] = useState<Selection>(new Set());
 
+  // Error
+  const [errorPartsAdded, setErrorPartsAdded] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchQuotation = async () => {
       const response = await getClientQuotationById(quotationId);
@@ -55,14 +58,14 @@ export const ClientQuotationDetails = () => {
       setPartsAdded(
         response.quotation.quotationParts.map(
           (part: PartAdded) =>
-          ({
-            id: part.id,
-            partId: part.part.id,
-            part: part.part,
-            quantity: part.quantity,
-            unitPrice: Number(part.unitPrice),
-            totalPrice: Number(part.totalPrice),
-          } as PartAdded)
+            ({
+              id: part.id,
+              partId: part.part.id,
+              part: part.part,
+              quantity: part.quantity,
+              unitPrice: Number(part.unitPrice),
+              totalPrice: Number(part.totalPrice),
+            } as PartAdded)
         )
       );
     };
@@ -97,10 +100,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-            ...p,
-            quantity,
-            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
-          }
+              ...p,
+              quantity,
+              totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+            }
           : p
       )
     );
@@ -111,10 +114,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-            ...p,
-            unitPrice: priceUnit,
-            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
-          }
+              ...p,
+              unitPrice: priceUnit,
+              totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+            }
           : p
       )
     );
@@ -126,6 +129,11 @@ export const ClientQuotationDetails = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    if (partsAdded.length === 0) {
+      setErrorPartsAdded("Por favor, agrega al menos una parte");
+      setIsLoading(false);
+      return;
+    }
     const response = await updateClientQuotation(
       quotationId,
       Array.from(stateSelected)[0] as string,
@@ -250,16 +258,18 @@ export const ClientQuotationDetails = () => {
         </section>
         <section className="flex flex-col gap-4 h-full overflow-hidden">
           <div className="flex flex-col gap-2 h-full overflow-hidden">
-            <p className="text-sm">Partes agregadas</p>
-            <p className="font-semibold">
-              Total: $
-              {partsAdded.reduce(
-                (acc, part) => acc + (part.totalPrice || 0),
-                0
-              )}
-            </p>
+            <p className="text-sm">Partes agregadas:</p>
+            {partsAdded && partsAdded.length > 0 && (
+              <p className="font-semibold">
+                Total: $
+                {partsAdded.reduce(
+                  (acc, part) => acc + (part.totalPrice || 0),
+                  0
+                )}
+              </p>
+            )}
             <div className="flex flex-col gap-2 h-full overflow-y-auto">
-              {partsAdded.length > 0 && (
+              {partsAdded.length > 0 ? (
                 <div className="flex flex-col gap-2">
                   {partsAdded.map((part) => (
                     <QuotePart
@@ -273,6 +283,16 @@ export const ClientQuotationDetails = () => {
                       onPriceUnitChange={handlePriceUnitChange}
                     />
                   ))}
+                </div>
+              ) : (
+                <div className="flex flex-col w-full items-center justify-center">
+                  <p
+                    className={`text-zinc-500 text-xs ${
+                      errorPartsAdded !== null && "text-rose-600"
+                    }`}
+                  >
+                    No hay partes agregadas
+                  </p>
                 </div>
               )}
             </div>

@@ -5,9 +5,7 @@ import axios from "axios";
 
 export const createOutput = async (output: NewOutput) => {
   try {
-    console.log("Creating output:", output);
     const response = await axios.post(`${ENDPOINT.OUTPUT}`, output);
-    console.log("Output created successfully:", response.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
