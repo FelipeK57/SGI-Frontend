@@ -56,7 +56,6 @@ export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPar
           type="number"
           className="max-w-36"
           minValue={0}
-          step={1000}
           startContent={<p className="text-zinc-400">$</p>}
           value={priceUnit}
           onValueChange={(value: number) => {

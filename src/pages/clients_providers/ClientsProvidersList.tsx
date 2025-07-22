@@ -72,7 +72,6 @@ export const NewClientProvider = () => {
     if (isClients) {
       const response = await createClient({
         name: data.name as string,
-        company: data.company as string,
         email: data.email as string,
         phone: data.phone as string,
       });
@@ -145,21 +144,10 @@ export const NewClientProvider = () => {
                         : "Ingrese el nombre del proveedor"
                     }`}
                   />
-                  {isClients && (
-                    <Input
-                      label="Empresa"
-                      labelPlacement="outside"
-                      variant="bordered"
-                      isRequired
-                      name="company"
-                      placeholder="Ingrese la empresa del cliente"
-                    />
-                  )}
                   <Input
                     label="Email"
                     labelPlacement="outside"
                     variant="bordered"
-                    isRequired
                     name="email"
                     placeholder={`${
                       isClients
@@ -168,10 +156,10 @@ export const NewClientProvider = () => {
                     }`}
                   />
                   <Input
+                    type="tel"
                     label="Teléfono"
                     labelPlacement="outside"
                     variant="bordered"
-                    isRequired
                     name="phone"
                     placeholder={`${
                       isClients

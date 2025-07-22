@@ -2,6 +2,7 @@ import axios from "axios";
 import { ENDPOINT } from "../config/apiConfig";
 import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
 import { addToast } from "@heroui/react";
+// import type { ClientQuotation } from "../Clases";
 
 export const getClientQuotations = async () => {
   try {
@@ -15,12 +16,18 @@ export const getClientQuotations = async () => {
 
 export const createClientQuotation = async (
   clientId: number,
-  parts: PartAdded[]
+  parts: PartAdded[],
+  quotationType: string,
+  requesterName: string,
+  currency: string
 ) => {
   try {
     const response = await axios.post(`${ENDPOINT.CLIENT_QUOTATIONS}`, {
       clientId,
       parts,
+      quotationType,
+      requesterName,
+      currency,
     });
     return response;
   } catch (error) {
@@ -113,6 +120,44 @@ export const getClientQuotationByCode = async (quotationCode: string) => {
   try {
     const response = await axios.get(
       `${ENDPOINT.CLIENT_QUOTATIONS}/code/${quotationCode}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Problemas",
+          description: error.response.data.message,
+          color: "warning",
+          timeout: 3000,
+        });
+      }
+      throw error;
+    }
+  }
+};
+
+export const getCalculateQuotationTotal = async (
+  clientQuotationId: number,
+  data: any
+) => {
+  try {
+    const response = await axios.post(
+      `${ENDPOINT.CLIENT_QUOTATIONS}/calculate/${clientQuotationId}`,
+      {
+        incoterm: data.incoterm,
+        currency: data.currency,
+        exchangeRate: Number(data.exchangeRate),
+        offerValidity: Number(data.offerValidity),
+        markupPercentage: Number(data.markupPercentage),
+        iva: Number(data.iva),
+        freightCost: Number(data.freightCost),
+        insuranceCost: Number(data.insuranceCost),
+        localTransportCost: Number(data.localTransportCost),
+        customsDuties: Number(data.customsDuties),
+        customsHandlingCost: Number(data.customsHandlingCost),
+        estimatedDeliveryDate: data.estimatedDeliveryDate,
+      }
     );
     return response.data;
   } catch (error) {

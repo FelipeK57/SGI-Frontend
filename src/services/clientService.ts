@@ -39,7 +39,6 @@ export const createClient = async (client: Client) => {
   try {
     const response = await axios.post(`${ENDPOINT.CLIENTS}`, {
       name: client.name,
-      company: client.company,
       email: client.email,
       phone: client.phone,
     });

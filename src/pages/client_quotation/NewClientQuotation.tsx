@@ -4,6 +4,11 @@ import {
   AutocompleteItem,
   Button,
   Input,
+  Radio,
+  RadioGroup,
+  Select,
+  SelectItem,
+  type Selection,
 } from "@heroui/react";
 import { SearchIcon } from "../part/Parts";
 import { useEffect, useState, type Key } from "react";
@@ -14,7 +19,6 @@ import { getPartByNumber } from "../../services/partService";
 import { PartFound } from "../../components/PartFound";
 import { QuotePart } from "../../components/QuotePart";
 import { createClientQuotation } from "../../services/clientQuotationService";
-import { useReload } from "../../context/ClientProviderContext";
 
 export interface PartAdded {
   id?: string;
@@ -28,15 +32,19 @@ export interface PartAdded {
 export const NewClientQuotation = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const navigate = useNavigate();
+  const [quotationType, setQuotationType] = useState<string>("");
   const [selectedClient, setSelectedClient] = useState<number | null>(null);
+  const [requesterName, setRequesterName] = useState<string>("");
   const [partNumber, setPartNumber] = useState<string>("");
   const [partsFound, setPartsFound] = useState<Part[]>([]);
   const [partsAdded, setPartsAdded] = useState<PartAdded[]>([]);
+  const [currency, setCurrency] = useState<Selection>(new Set())
   const [isLoading, setIsLoading] = useState(false);
-  const { reload, setReload } = useReload();
 
   // Errors
   const [errors, setErrors] = useState({
+    errorQuotationType: null as string | null,
+    errorRequesterName: null as string | null,
     errorSelectClient: null as string | null,
     errorPartsAdded: null as string | null,
   });
@@ -45,14 +53,21 @@ export const NewClientQuotation = () => {
     const getClients = async () => {
       const data = await fetchClients();
       setClients(data.clients);
-      setReload(!reload);
     };
     getClients();
-  }, [reload]);
+  }, []);
 
   const handleSearchPart = async (partNumber: string) => {
     const data = await getPartByNumber(partNumber);
     setPartsFound(data.parts);
+    if (data.parts.length === 0) {
+      addToast({
+        title: "Parte no encontrada",
+        description: "No se encontraron partes con ese número",
+        color: "warning",
+        timeout: 3000,
+      });
+    }
   };
 
   const handleSelectionChange = (key: Key | null) => {
@@ -64,6 +79,12 @@ export const NewClientQuotation = () => {
   };
 
   const handleAddPart = (part: Part) => {
+    if (errors.errorPartsAdded) {
+      setErrors((prev) => ({
+        ...prev,
+        errorPartsAdded: null,
+      }));
+    }
     if (partsAdded.some((p) => p.partId === part.id)) {
       addToast({
         title: "Parte ya agregada",
@@ -121,27 +142,47 @@ export const NewClientQuotation = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+
+    if (quotationType === "") {
+      setErrors((prev) => ({
+        ...prev,
+        errorQuotationType: "Selecciona un tipo de cotización",
+      }));
+    }
     if (!selectedClient) {
       setErrors((prev) => ({
         ...prev,
-        errorSelectClient: "Por favor, selecciona un cliente",
+        errorSelectClient: "Selecciona un cliente",
+      }));
+    }
+    if (requesterName === "") {
+      setErrors((prev) => ({
+        ...prev,
+        errorRequesterName: "Ingresa el nombre del cotizador",
       }));
     }
     if (partsAdded.length === 0) {
       setErrors((prev) => ({
         ...prev,
-        errorPartsAdded: "Por favor, agrega al menos una parte",
+        errorPartsAdded: "Agrega al menos una parte",
       }));
     }
 
-    if (!selectedClient || partsAdded.length === 0) {
+    if (
+      !selectedClient ||
+      partsAdded.length === 0 ||
+      quotationType === "" ||
+      requesterName === ""
+    ) {
       setIsLoading(false);
       return;
     }
-
     const response = await createClientQuotation(
       selectedClient as number,
-      partsAdded
+      partsAdded,
+      quotationType,
+      requesterName,
+      Array.from(currency)[0] as string || "USD"
     );
     if (response && response.status === 201) {
       navigate("/dashboard/client-quotes");
@@ -181,25 +222,62 @@ export const NewClientQuotation = () => {
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-4 h-fit overflow-hidden">
         <div className="flex flex-col gap-2">
+          <RadioGroup
+            value={quotationType}
+            onValueChange={(value) => {
+              setErrors((prev) => ({
+                ...prev,
+                errorQuotationType: null,
+              }));
+              setQuotationType(value);
+            }}
+            orientation="horizontal"
+            isRequired
+            isInvalid={errors.errorQuotationType !== null}
+            label="Tipo de cotización"
+            classNames={{
+              label: `text-sm ${
+                errors.errorQuotationType ? "text-danger" : " text-zinc-950"
+              }`,
+              base: "flex flex-col gap-4",
+              wrapper:
+                "grid grid-cols-2 gap-6 md:gap-4 w-[95%] md:w-full ml-2 mb-2",
+            }}
+          >
+            <Radio
+              classNames={{
+                label: "text-sm md:text-base",
+                base: `flex flex-row-reverse justify-between h-20 min-w-full border-1 gap-2 rounded-lg data-[selected=true]:border-primary data-[selected=true]:border-2 ${
+                  errors.errorQuotationType ? "border-danger" : "border-default"
+                }`,
+                description: "text-xs text-zinc-500",
+              }}
+              value={"Importación"}
+              size="lg"
+              description="Compra por fuera del pais"
+            >
+              Importación
+            </Radio>
+            <Radio
+              classNames={{
+                label: "text-sm md:text-base",
+                base: `flex flex-row-reverse justify-between h-20 min-w-full border-1 gap-2 rounded-lg data-[selected=true]:border-primary data-[selected=true]:border-2 ${
+                  errors.errorQuotationType ? "border-danger" : "border-default"
+                }`,
+                description: "text-xs text-zinc-500",
+              }}
+              value={"Local"}
+              size="lg"
+              description="Compra dentro del pais"
+            >
+              Local
+            </Radio>
+          </RadioGroup>
           <Autocomplete
             label="Cliente"
             labelPlacement="outside"
             placeholder="Buscar cliente"
             defaultItems={clients}
-            description={
-              <>
-                <p>
-                  No encuentras el cliente?, da clic en el texto subrayado{" "}
-                  <a
-                    className="text-blue-500 underline"
-                    href="http://localhost:5173/dashboard/clients-and-providers"
-                    target="_blank"
-                  >
-                    Crear nuevo cliente
-                  </a>{" "}
-                </p>
-              </>
-            }
             variant="bordered"
             startContent={<SearchIcon />}
             selectorIcon={<SelectorIcon />}
@@ -218,6 +296,25 @@ export const NewClientQuotation = () => {
               <AutocompleteItem key={client.id}>{client.name}</AutocompleteItem>
             )}
           </Autocomplete>
+          <Input
+            isRequired
+            label="Nombre del cotizador"
+            labelPlacement="outside"
+            variant="bordered"
+            placeholder="Ingresa el nombre del cotizador"
+            value={requesterName}
+            onChange={(e) => {
+              if (errors.errorRequesterName) {
+                setErrors((prev) => ({
+                  ...prev,
+                  errorRequesterName: null,
+                }));
+              }
+              setRequesterName(e.target.value);
+            }}
+            isInvalid={errors.errorRequesterName !== null}
+            errorMessage={errors.errorRequesterName}
+          />
           <div className="flex gap-2 items-end">
             <Input
               value={partNumber}
@@ -240,20 +337,6 @@ export const NewClientQuotation = () => {
                   Buscar
                 </Button>
               }
-              description={
-                <>
-                  <p>
-                    No encuentras la parte?, da clic en el texto subrayado{" "}
-                    <a
-                      className="text-blue-500 underline"
-                      href="http://localhost:5173/dashboard/parts/new"
-                      target="_blank"
-                    >
-                      Crear nueva parte
-                    </a>
-                  </p>
-                </>
-              }
             />
           </div>
           {partsFound.length > 0 && partNumber !== "" && (
@@ -271,14 +354,32 @@ export const NewClientQuotation = () => {
         <div className="flex flex-col gap-2 h-full overflow-hidden">
           <p className="text-sm">Partes agregadas:</p>
           {partsAdded && partsAdded.length > 0 && (
-            <p className="font-semibold">
-              Total: $
-              {partsAdded.reduce(
-                (acc, part) => acc + (part.totalPrice || 0),
-                0
-              )}
-            </p>
+            <div className="flex gap-2 justify-between items-center">
+              <p className="font-semibold">
+                Total: $
+                {partsAdded.reduce(
+                  (acc, part) => acc + (part.totalPrice || 0),
+                  0
+                )}
+              </p>
+              <Select
+                label="Moneda"
+                defaultSelectedKeys={["USD"]}
+                name="currency"
+                isRequired
+                size="sm"
+                disallowEmptySelection
+                onSelectionChange={setCurrency}
+                variant="bordered"
+                className="w-1/2 md:w-1/3"
+              >
+                <SelectItem key={"USD"}>USD</SelectItem>
+                <SelectItem key={"EUR"}>EUR</SelectItem>
+                <SelectItem key={"COP"}>COP</SelectItem>
+              </Select>
+            </div>
           )}
+
           <div className="flex flex-col gap-2 h-full overflow-y-auto">
             {partsAdded.length > 0 ? (
               <div className="flex flex-col gap-2">
@@ -294,13 +395,15 @@ export const NewClientQuotation = () => {
               </div>
             ) : (
               <div className="flex flex-col w-full items-center justify-center">
-                <p
-                  className={`text-zinc-500 text-xs ${
-                    errors.errorPartsAdded !== null && "text-rose-600"
-                  }`}
-                >
-                  No hay partes agregadas
-                </p>
+                {errors.errorPartsAdded ? (
+                  <p className="text-danger text-xs">
+                    {errors.errorPartsAdded}
+                  </p>
+                ) : (
+                  <p className="text-zinc-500 text-xs">
+                    No hay partes agregadas
+                  </p>
+                )}
               </div>
             )}
           </div>

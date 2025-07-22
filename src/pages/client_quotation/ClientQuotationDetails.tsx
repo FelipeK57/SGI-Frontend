@@ -19,6 +19,13 @@ import { QuotePart } from "../../components/QuotePart";
 import { SearchIcon } from "../part/Parts";
 import { getPartByNumber } from "../../services/partService";
 import { PartFound } from "../../components/PartFound";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import type { TDocumentDefinitions } from "pdfmake/interfaces";
+import ExtraCosts from "../../components/forms/ExtraCosts";
+import { ArrowLeftIcon } from "../part/DetailsPart";
+
+pdfMake.vfs = pdfFonts.vfs;
 
 export const states = [
   {
@@ -53,6 +60,7 @@ export const ClientQuotationDetails = () => {
     const fetchQuotation = async () => {
       const response = await getClientQuotationById(quotationId);
       setQuotation(response.quotation);
+      console.log(response);
       setDate(formatDate(response.quotation.createdAt));
       setStateSelected(new Set([response.quotation.state]));
       setPartsAdded(
@@ -78,6 +86,9 @@ export const ClientQuotationDetails = () => {
   };
 
   const handleAddPart = (part: Part) => {
+    if (errorPartsAdded) {
+      setErrorPartsAdded(null);
+    }
     if (partsAdded.some((p) => p.partId === part.id)) {
       addToast({
         title: "Parte ya agregada",
@@ -130,7 +141,7 @@ export const ClientQuotationDetails = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     if (partsAdded.length === 0) {
-      setErrorPartsAdded("Por favor, agrega al menos una parte");
+      setErrorPartsAdded("Agrega al menos una parte");
       setIsLoading(false);
       return;
     }
@@ -153,19 +164,20 @@ export const ClientQuotationDetails = () => {
 
   return (
     <main className="flex flex-col gap-3 w-full h-full overflow-hidden">
+      <Button
+        onPress={() => navigate("/dashboard/client-quotes")}
+        isIconOnly
+        variant="light"
+        color="primary"
+      >
+        <ArrowLeftIcon />
+      </Button>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">
           Detalles cotización: {quotation?.code}
         </h1>
         <div className="hidden md:flex gap-2">
-          <Button
-            className="w-full"
-            onPress={() => navigate("/dashboard/client-quotes")}
-            variant="bordered"
-            color="default"
-          >
-            Cancelar
-          </Button>
+          <ExtraCosts clientQuotation={quotation as ClientQuotation} />
           <Button
             onPress={handleSubmit}
             isLoading={isLoading}
@@ -202,12 +214,28 @@ export const ClientQuotationDetails = () => {
             </Select>
           </div>
           <Input
-            label="Cliente"
+            label="Tipo de compra"
             labelPlacement="outside"
             variant="bordered"
             isReadOnly
-            value={quotation?.client.name}
+            value={quotation?.isInternational ? "Importación" : "Local"}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="Cliente"
+              labelPlacement="outside"
+              variant="bordered"
+              isReadOnly
+              value={quotation?.client.name}
+            />
+            <Input
+              label="Solicitante"
+              labelPlacement="outside"
+              variant="bordered"
+              isReadOnly
+              value={quotation?.requesterName}
+            />
+          </div>
           <Input
             value={partNumber}
             onChange={(e) => setPartNumber(e.target.value)}
@@ -261,11 +289,12 @@ export const ClientQuotationDetails = () => {
             <p className="text-sm">Partes agregadas:</p>
             {partsAdded && partsAdded.length > 0 && (
               <p className="font-semibold">
-                Total: $
+                Subtotal partes: $
                 {partsAdded.reduce(
                   (acc, part) => acc + (part.totalPrice || 0),
                   0
-                )}
+                )}{" "}
+                {quotation?.currency}
               </p>
             )}
             <div className="flex flex-col gap-2 h-full overflow-y-auto">
@@ -286,13 +315,13 @@ export const ClientQuotationDetails = () => {
                 </div>
               ) : (
                 <div className="flex flex-col w-full items-center justify-center">
-                  <p
-                    className={`text-zinc-500 text-xs ${
-                      errorPartsAdded !== null && "text-rose-600"
-                    }`}
-                  >
-                    No hay partes agregadas
-                  </p>
+                  {errorPartsAdded ? (
+                    <p className="text-danger text-xs">{errorPartsAdded}</p>
+                  ) : (
+                    <p className="text-zinc-500 text-xs">
+                      No hay partes agregadas
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -321,3 +350,115 @@ export const ClientQuotationDetails = () => {
     </main>
   );
 };
+
+// export const generateQuotationPDF = async (
+//   quotation: ClientQuotation,
+//   parts: PartAdded[]
+// ) => {
+//   try {
+//     // Preparar datos para la tabla de partes
+//     const partRows = parts.map((p) => ({
+//       name: p.part.name,
+//       quantity: p.quantity ?? 0,
+//       unitPrice: p.unitPrice ?? 0,
+//       totalPrice: p.totalPrice ?? 0,
+//     }));
+
+//     // Crear el PDF
+//     const docDefinition: TDocumentDefinitions = {
+//       content: [
+//         { text: "Cotización", style: "header" },
+//         { text: `Código: ${quotation.code}` },
+//         { text: `Cliente: ${quotation.client.name}` },
+//         { text: `Solicitante: ${quotation.requesterName}` },
+//         { text: `Vigencia de la oferta: ${quotation.offerValidity} dias` },
+//         { text: `Incoterm: ${quotation.incoterm}` },
+//         {
+//           text: `Tasa de cambio: ${quotation.exchangeRate} ${quotation.currency} → COP`,
+//           margin: [0, 0, 0, 10],
+//           style: "normal",
+//         },
+
+//         {
+//           table: {
+//             headerRows: 1,
+//             widths: ["*", "auto", "auto", "auto"],
+//             body: [
+//               ["Parte", "Cantidad", "P. Unitario", "Subtotal"],
+//               ...partRows.map((row) => [
+//                 row.name,
+//                 row.quantity,
+//                 `${quotation.currency} ${row.unitPrice.toFixed(2)}`,
+//                 `${quotation.currency} ${row.totalPrice.toFixed(2)}`,
+//               ]),
+//             ],
+//           },
+//           layout: "lightHorizontalLines",
+//         },
+
+//         {
+//           style: "totals",
+//           margin: [0, 20, 0, 0],
+//           table: {
+//             widths: ["*", "auto"],
+//             body: [
+//               [
+//                 "Subtotal (estimado)",
+//                 `${quotation.currency} ${subtotal.toFixed(2)}`,
+//               ],
+//               ["+ Markup", `${quotation.currency} ${markup.toFixed(2)}`],
+//               ["+ IVA", `${quotation.currency} ${ivaAmount.toFixed(2)}`],
+//               [
+//                 { text: "TOTAL", bold: true },
+//                 {
+//                   text: `${quotation.currency} ${totalPrice.toFixed(2)}`,
+//                   bold: true,
+//                 },
+//               ],
+//               [
+//                 { text: "TOTAL en COP", italics: true },
+//                 {
+//                   text: `COP ${(totalPrice * exchangeRate).toLocaleString(
+//                     "es-CO",
+//                     {
+//                       style: "currency",
+//                       currency: "COP",
+//                     }
+//                   )}`,
+//                   italics: true,
+//                 },
+//               ],
+//             ],
+//           },
+//           layout: "noBorders",
+//         },
+//       ],
+//       styles: {
+//         header: {
+//           fontSize: 20,
+//           bold: true,
+//           marginBottom: 10,
+//         },
+//         totals: {
+//           fontSize: 12,
+//           alignment: "right",
+//         },
+//       },
+//       defaultStyle: {
+//         fontSize: 11,
+//       },
+//     };
+
+//     pdfMake
+//       .createPdf(docDefinition)
+//       .download(`Cotizacion_${quotation.code}.pdf`);
+//   } catch (error) {
+//     console.error("Error generating PDF:", error);
+//     addToast({
+//       title: "Error",
+//       description: "No se pudo generar el PDF de la cotización",
+//       color: "danger",
+//       timeout: 3000,
+//     });
+//   }
+// };

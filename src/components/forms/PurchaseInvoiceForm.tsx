@@ -155,7 +155,6 @@ export const PurchaseInvoiceForm = ({
             }
             name="totalAmount"
             minValue={0}
-            step={100}
             placeholder="Ingresa el monto total"
             labelPlacement="outside"
             variant="bordered"
@@ -163,7 +162,7 @@ export const PurchaseInvoiceForm = ({
           />
         </div>
         {
-          purchaseOrder.providerQuotation.quotationType === "Exterior" &&
+          purchaseOrder.providerQuotation &&
           <RadioGroup
             label="¿El envió está incluido?"
             name="shippingIncluded"
@@ -202,7 +201,6 @@ export const PurchaseInvoiceForm = ({
             }
             name="deliveryAmount"
             minValue={0}
-            step={10}
             placeholder="Ingresa el monto del envió"
             labelPlacement="outside"
             variant="bordered"

@@ -20,7 +20,6 @@ export interface Part {
 export interface Client {
   id?: number;
   name: string;
-  company?: string;
   email?: string;
   phone?: string;
 }
@@ -39,8 +38,8 @@ export interface OutputPart {
 export interface Provider {
   id?: number;
   name: string;
-  email: string;
-  phone: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface ClientQuotation {
@@ -50,6 +49,24 @@ export interface ClientQuotation {
   createdAt: string;
   state: "Aceptada" | "Cancelada" | "Pendiente";
   totalPrice?: number;
+  requesterName: string;
+
+  offerValidity?: number;
+  estimatedDeliveryDate?: string;
+  markupPercentage?: number;
+  iva?: number;
+
+  freightCost?: number;
+  insuranceCost?: number;
+  localTransportCost?: number;
+
+  customsDuties?: number;
+  customsHandlingCost?: number;
+
+  incoterm?: string;
+  currency?: "USD" | "EUR" | "COP";
+  exchangeRate?: number;
+  isInternational?: boolean;
 }
 
 export interface ProviderQuotation {
@@ -58,13 +75,13 @@ export interface ProviderQuotation {
   provider: Provider;
   createdAt: string;
   state: "Aceptada" | "Cancelada" | "Pendiente";
-  quotationType: "Exterior" | "Local";
 }
 
 export interface PurchaseOrder {
   id?: number;
   code: string;
-  providerQuotation: ProviderQuotation;
+  providerQuotation?: ProviderQuotation
+  clientQuotation?: ClientQuotation;
   createdAt: string;
   state:
     | "Pend. Factura"
@@ -117,8 +134,10 @@ export interface Aduana {
 
 export interface QuotationPart {
   id?: number;
-  clientQuotationId: number;
-  clientQuotation: ClientQuotation;
+  clientQuotationId?: number;
+  clientQuotation?: ClientQuotation;
+  providerQuotationId?: number;
+  providerQuotation?: ProviderQuotation;
   partId: number;
   part: Part;
   quantity: number;

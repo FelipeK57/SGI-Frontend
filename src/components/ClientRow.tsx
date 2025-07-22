@@ -29,7 +29,6 @@ export const ClientRow = ({ client, reload, setReload }: ClientRowProps) => {
     try {
       const clientToUpdate = {
         name: clientData.name,
-        company: clientData.company,
         email: clientData.email,
         phone: clientData.phone,
       };
@@ -62,9 +61,8 @@ export const ClientRow = ({ client, reload, setReload }: ClientRowProps) => {
         key={client.id}
       >
         <p>{client.name}</p>
-        <p>{client.company}</p>
-        <p className="truncate">{client.email}</p>
-        <p className="hidden md:block">{client.phone}</p>
+        <p className="truncate">{client.email || "-"}</p>
+        <p>{client.phone || "-"}</p>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -87,19 +85,7 @@ export const ClientRow = ({ client, reload, setReload }: ClientRowProps) => {
                   }
                 />
                 <Input
-                  placeholder="Ingrese la empresa del cliente"
-                  isRequired
-                  label="Empresa"
-                  labelPlacement="outside"
-                  variant="bordered"
-                  value={clientData.company}
-                  onChange={(e) =>
-                    setClientData({ ...clientData, company: e.target.value })
-                  }
-                />
-                <Input
                   placeholder="Ingrese el email del cliente"
-                  isRequired
                   label="Email"
                   labelPlacement="outside"
                   variant="bordered"
@@ -109,8 +95,7 @@ export const ClientRow = ({ client, reload, setReload }: ClientRowProps) => {
                   }
                 />
                 <Input
-                  isRequired
-                  type="number"
+                  type="tel"
                   placeholder="Ingrese el teléfono del cliente"
                   label="Teléfono"
                   labelPlacement="outside"
