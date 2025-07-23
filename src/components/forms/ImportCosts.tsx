@@ -11,21 +11,31 @@ import {
   DatePicker,
   NumberInput,
   Form,
+  addToast,
 } from "@heroui/react";
-import React, { useState } from "react";
-import { getCalculateQuotationTotal } from "../../services/clientQuotationService";
+import React, { useEffect, useState } from "react";
+import { getCalculateImportTotalPrice } from "../../services/clientQuotationService";
 import { type ClientQuotation } from "../../Clases";
 import { parseDate } from "@internationalized/date";
 
-interface ExtraCostsProps {
+interface ImportCostsProps {
   clientQuotation: ClientQuotation;
+  reload: boolean;
+  setReload: (reload: boolean) => void;
 }
 
-export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
+export const ImportCosts = ({ clientQuotation, reload, setReload }: ImportCostsProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [quotationData, setQuotationData] =
-    useState<ClientQuotation>(clientQuotation);
-  console.log("Quotation Data:", quotationData);
+  const [quotationData, setQuotationData] = useState<ClientQuotation | null>(
+    null
+  );
+  useEffect(() => {
+    if (clientQuotation) {
+      setQuotationData(clientQuotation);
+    }
+  }, [clientQuotation]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const incotermOptions = [
     { key: "EXW", label: "EXW - Ex Works" },
@@ -37,24 +47,44 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log("Form Data:", data);
-    const response = await getCalculateQuotationTotal(
-      clientQuotation.id as number,
-      data
-    );
-    console.log("Response:", response);
+    try {
+      setIsLoading(true);
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+      console.log("Form Data:", data);
+      const response = await getCalculateImportTotalPrice(
+        clientQuotation.id as number,
+        data
+      );
+      if (response && response.status === 200) {
+        setQuotationData({
+          ...quotationData,
+          ...response.data.quotation,
+        });
+        addToast({
+          title: "Costos registrados",
+          description:
+            "Los costos adicionales se han registrado correctamente.",
+          color: "success",
+          timeout: 3000,
+        });
+        setReload(!reload);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error calculating quotation total:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
       <Button
-        className="w-full"
+        className="w-full px-6"
         onPress={onOpen}
         color="primary"
         variant="bordered"
       >
-        Registrar costos
+        Costos de importación
       </Button>
       <Modal
         isOpen={isOpen}
@@ -67,7 +97,7 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
             <>
               <Form onSubmit={handleSubmit} className="flex flex-col">
                 <ModalHeader className="flex flex-col gap-1">
-                  Registro de costos adicionales
+                  Costos de importación
                 </ModalHeader>
                 <ModalBody className="gap-4 w-full">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -77,10 +107,12 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                       label="Incoterm"
                       defaultSelectedKeys={[quotationData?.incoterm || "EXW"]}
                       onSelectionChange={(keys) => {
-                        setQuotationData({
-                          ...quotationData,
-                          incoterm: Array.from(keys)[0] as string,
-                        });
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            incoterm: Array.from(keys)[0] as string,
+                          });
+                        }
                       }}
                       labelPlacement="outside"
                       placeholder="Selecciona un incoterm"
@@ -93,14 +125,16 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     <Select
                       defaultSelectedKeys={[quotationData?.currency || "USD"]}
                       onSelectionChange={(keys) => {
-                        setQuotationData({
-                          ...quotationData,
-                          currency: Array.from(keys)[0] as
-                            | "USD"
-                            | "EUR"
-                            | "COP"
-                            | undefined,
-                        });
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            currency: Array.from(keys)[0] as
+                              | "USD"
+                              | "EUR"
+                              | "COP"
+                              | undefined,
+                          });
+                        }
                       }}
                       name="currency"
                       variant="bordered"
@@ -117,14 +151,16 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                       name="exchangeRate"
                       variant="bordered"
                       value={quotationData?.exchangeRate}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          exchangeRate: value,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            exchangeRate: value,
+                          });
+                        }
+                      }}
                       label="Tasa de cambio"
-                      placeholder="4000"
+                      placeholder="Ingrese la tasa de cambio"
                       labelPlacement="outside"
                       isRequired
                       minValue={0}
@@ -132,33 +168,37 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     />
                     <NumberInput
                       value={quotationData?.offerValidity}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          offerValidity: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            offerValidity: value as number,
+                          });
+                        }
+                      }}
                       name="offerValidity"
                       variant="bordered"
                       label="Validez de la oferta (días)"
-                      placeholder="15"
+                      placeholder="Ingrese la validez de la oferta"
                       labelPlacement="outside"
-                      minValue={0}
+                      minValue={1}
                       isRequired
                       endContent={<span className="text-zinc-400">días</span>}
                     />
                     <NumberInput
                       value={quotationData?.markupPercentage}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          markupPercentage: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            markupPercentage: value as number,
+                          });
+                        }
+                      }}
                       name="markupPercentage"
                       variant="bordered"
-                      label="Porcentaje de markup (%)"
-                      placeholder="10"
+                      label="Porcentaje de ganancia (%)"
+                      placeholder="Ingrese el porcentaje de ganancia"
                       labelPlacement="outside"
                       minValue={0}
                       maxValue={100}
@@ -167,16 +207,18 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     />
                     <NumberInput
                       value={quotationData?.iva}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          iva: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            iva: value as number,
+                          });
+                        }
+                      }}
                       name="iva"
                       variant="bordered"
                       label="IVA (%)"
-                      placeholder="19"
+                      placeholder="Ingrese el IVA"
                       labelPlacement="outside"
                       minValue={0}
                       step={19}
@@ -187,16 +229,18 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                     <NumberInput
                       value={quotationData?.freightCost}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          freightCost: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            freightCost: value as number,
+                          });
+                        }
+                      }}
                       name="freightCost"
                       variant="bordered"
                       label="Costo de flete"
-                      placeholder="1000"
+                      placeholder="Ingrese el costo de flete"
                       labelPlacement="outside"
                       startContent={<span className="text-zinc-400">$</span>}
                       minValue={0}
@@ -204,15 +248,17 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     />
                     <NumberInput
                       value={quotationData?.insuranceCost}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          insuranceCost: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            insuranceCost: value as number,
+                          });
+                        }
+                      }}
                       name="insuranceCost"
                       variant="bordered"
-                      placeholder="500"
+                      placeholder="Ingrese el costo de seguro"
                       label="Costo de seguro"
                       labelPlacement="outside"
                       startContent={<span className="text-zinc-400">$</span>}
@@ -221,15 +267,17 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     />
                     <NumberInput
                       value={quotationData?.localTransportCost}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          localTransportCost: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            localTransportCost: value as number,
+                          });
+                        }
+                      }}
                       name="localTransportCost"
                       variant="bordered"
-                      placeholder="200"
+                      placeholder="Ingrese el costo de transporte local"
                       label="Transporte local"
                       labelPlacement="outside"
                       startContent={<span className="text-zinc-400">$</span>}
@@ -238,32 +286,36 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     />
                     <NumberInput
                       value={quotationData?.customsDuties}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          customsDuties: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            customsDuties: value as number,
+                          });
+                        }
+                      }}
                       name="customsDuties"
                       variant="bordered"
                       label="Impuestos aduaneros"
-                      placeholder="300"
+                      placeholder="Ingrese los impuestos aduaneros"
                       labelPlacement="outside"
                       minValue={0}
                       startContent={<span className="text-zinc-400">$</span>}
                     />
                     <NumberInput
                       value={quotationData?.customsHandlingCost}
-                      onValueChange={(value) =>
-                        setQuotationData({
-                          ...quotationData,
-                          customsHandlingCost: value as number,
-                        })
-                      }
+                      onValueChange={(value) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            customsHandlingCost: value as number,
+                          });
+                        }
+                      }}
                       name="customsHandlingCost"
                       variant="bordered"
                       label="Gastos de agenciamiento"
-                      placeholder="100"
+                      placeholder="Ingrese los gastos de agenciamiento"
                       labelPlacement="outside"
                       startContent={<span className="text-zinc-400">$</span>}
                       minValue={0}
@@ -274,12 +326,14 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                           ? parseDate(quotationData.estimatedDeliveryDate)
                           : null
                       }
-                      onChange={(date) =>
-                        setQuotationData({
-                          ...quotationData,
-                          estimatedDeliveryDate: date ? date.toString() : "",
-                        })
-                      }
+                      onChange={(date) => {
+                        if (quotationData) {
+                          setQuotationData({
+                            ...quotationData,
+                            estimatedDeliveryDate: date ? date.toString() : "",
+                          });
+                        }
+                      }}
                       name="estimatedDeliveryDate"
                       variant="bordered"
                       label="Fecha estimada de entrega"
@@ -293,7 +347,7 @@ export default function ExtraCosts({ clientQuotation }: ExtraCostsProps) {
                     Cancelar
                   </Button>
                   <Button color="primary" type="submit">
-                    Registrar costos
+                    {isLoading ? "Registrando..." : "Registrar costos"}
                   </Button>
                 </ModalFooter>
               </Form>

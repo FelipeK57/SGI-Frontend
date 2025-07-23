@@ -67,6 +67,12 @@ export interface ClientQuotation {
   currency?: "USD" | "EUR" | "COP";
   exchangeRate?: number;
   isInternational?: boolean;
+
+  // Add total fields for calculations
+  cifTotal?: number;
+  subtotal?: number;
+  subtotalWithMarkup?: number;
+  ivaAmount?: number;
 }
 
 export interface ProviderQuotation {
@@ -80,7 +86,7 @@ export interface ProviderQuotation {
 export interface PurchaseOrder {
   id?: number;
   code: string;
-  providerQuotation?: ProviderQuotation
+  providerQuotation?: ProviderQuotation;
   clientQuotation?: ClientQuotation;
   createdAt: string;
   state:

@@ -137,13 +137,13 @@ export const getClientQuotationByCode = async (quotationCode: string) => {
   }
 };
 
-export const getCalculateQuotationTotal = async (
+export const getCalculateImportTotalPrice = async (
   clientQuotationId: number,
   data: any
 ) => {
   try {
     const response = await axios.post(
-      `${ENDPOINT.CLIENT_QUOTATIONS}/calculate/${clientQuotationId}`,
+      `${ENDPOINT.CLIENT_QUOTATIONS}/import/${clientQuotationId}`,
       {
         incoterm: data.incoterm,
         currency: data.currency,
@@ -159,7 +159,39 @@ export const getCalculateQuotationTotal = async (
         estimatedDeliveryDate: data.estimatedDeliveryDate,
       }
     );
-    return response.data;
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Problemas",
+          description: error.response.data.message,
+          color: "warning",
+          timeout: 3000,
+        });
+      }
+      throw error;
+    }
+  }
+};
+
+export const getCalculateLocalTotalPrice = async (
+  clientQuotationId: number,
+  data: any
+) => {
+  try {
+    console.log("Calculating local total price with data:", data);
+    const response = await axios.post(
+      `${ENDPOINT.CLIENT_QUOTATIONS}/local/${clientQuotationId}`,
+      {
+        offerValidity: data.offerValidity,
+        markupPercentage: data.markupPercentage,
+        iva: data.iva,
+        localTransportCost: data.localTransportCost,
+        estimatedDeliveryDate: data.estimatedDeliveryDate,
+      }
+    );
+    return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
