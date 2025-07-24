@@ -171,45 +171,52 @@ export const ClientQuotationDetails = () => {
         >
           <ArrowLeftIcon />
         </Button>
-        <Button
-          onPress={() => {
-            quotation?.isInternational ? 
-            generateQuotationPDF(quotation as ClientQuotation, partsAdded) : generateLocalQuotationPDF(quotation as ClientQuotation, partsAdded);
-          }}
-          color="default"
-          variant="bordered"
-        >
-          Generar PDF
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onPress={() => {
+              quotation?.isInternational
+                ? generateQuotationPDF(quotation as ClientQuotation, partsAdded)
+                : generateLocalQuotationPDF(
+                    quotation as ClientQuotation,
+                    partsAdded
+                  );
+            }}
+            color="default"
+            variant="bordered"
+          >
+            <ExportIcon />
+            Descargar PDF
+          </Button>
+          <div className="hidden md:flex gap-2">
+            {quotation?.isInternational ? (
+              <ImportCosts
+                clientQuotation={quotation as ClientQuotation}
+                reload={reload}
+                setReload={setReload}
+              />
+            ) : (
+              <LocalCosts
+                quotation={quotation as ClientQuotation}
+                reload={reload}
+                setReload={setReload}
+              />
+            )}
+            <Button
+              onPress={handleSubmit}
+              isLoading={isLoading}
+              variant="solid"
+              color="primary"
+              className="w-full px-8"
+            >
+              {isLoading ? "Guardando..." : "Guardar cambios"}
+            </Button>
+          </div>
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">
           Detalles cotización: {quotation?.code}
         </h1>
-        <div className="hidden md:flex gap-2">
-          {quotation?.isInternational ? (
-            <ImportCosts
-              clientQuotation={quotation as ClientQuotation}
-              reload={reload}
-              setReload={setReload}
-            />
-          ) : (
-            <LocalCosts
-              quotation={quotation as ClientQuotation}
-              reload={reload}
-              setReload={setReload}
-            />
-          )}
-          <Button
-            onPress={handleSubmit}
-            isLoading={isLoading}
-            variant="solid"
-            color="primary"
-            className="w-full px-8"
-          >
-            {isLoading ? "Guardando..." : "Guardar cambios"}
-          </Button>
-        </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4 h-full overflow-hidden">
         <section className="flex flex-col gap-4 h-fit">
@@ -278,20 +285,6 @@ export const ClientQuotationDetails = () => {
               >
                 Buscar
               </Button>
-            }
-            description={
-              <>
-                <p>
-                  No encuentras la parte?, da clic en el texto subrayado{" "}
-                  <a
-                    className="text-blue-500 underline"
-                    href="http://localhost:5173/dashboard/parts/new"
-                    target="_blank"
-                  >
-                    Crear nueva parte
-                  </a>
-                </p>
-              </>
             }
           />
           {partsFound.length > 0 && partNumber !== "" && (
@@ -457,5 +450,24 @@ export const ClientQuotationDetails = () => {
         </Button>
       </div>
     </main>
+  );
+};
+
+const ExportIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="size-4 text-gray-800"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+      />
+    </svg>
   );
 };

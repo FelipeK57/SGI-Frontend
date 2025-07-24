@@ -71,6 +71,7 @@ export interface ClientQuotation {
   // Add total fields for calculations
   cifTotal?: number;
   subtotal?: number;
+  subtotalParts?: number;
   subtotalWithMarkup?: number;
   ivaAmount?: number;
 }
@@ -86,8 +87,7 @@ export interface ProviderQuotation {
 export interface PurchaseOrder {
   id?: number;
   code: string;
-  providerQuotation?: ProviderQuotation;
-  clientQuotation?: ClientQuotation;
+  provider: Provider;
   createdAt: string;
   state:
     | "Pend. Factura"
@@ -96,6 +96,7 @@ export interface PurchaseOrder {
     | "Pend. Entrega"
     | "Pend. Ingreso"
     | "Finalizada";
+  quotationType: "Local" | "Importación";
 }
 
 export interface Quotation {

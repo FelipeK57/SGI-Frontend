@@ -17,14 +17,10 @@ export const DetailsPurchaseOrder = ({ purchaseOrder, quotations }: DetailsPurch
       </p>
       <p className="text-sm">Código: {purchaseOrder?.code}</p>
       <p className="text-sm">
-        Código cotización proveedor:{" "}
-        {purchaseOrder?.providerQuotation.code}
+        Proveedor: {purchaseOrder?.provider.name}
       </p>
       <p className="text-sm">
-        Proveedor: {purchaseOrder?.providerQuotation.provider.name}
-      </p>
-      <p className="text-sm">
-        Tipo de compra: {purchaseOrder?.providerQuotation.quotationType}
+        Tipo de compra: {purchaseOrder?.quotationType}
       </p>
       <p className="font-semibold">Lista de cotizaciones:</p>
       <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 h-full overflow-y-auto gap-4">
@@ -44,7 +40,7 @@ export const DetailsPurchaseOrder = ({ purchaseOrder, quotations }: DetailsPurch
                 Cliente: {quotation.clientQuotation.client.name}
               </p>
               <p className="text-sm">
-                Empresa: {quotation.clientQuotation.client.company}
+                Solicitante: {quotation.clientQuotation.requesterName}
               </p>
               <p className="text-sm">
                 Precio total: ${quotation.clientQuotation.totalPrice}

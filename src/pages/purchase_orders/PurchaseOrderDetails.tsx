@@ -33,7 +33,7 @@ export const PurchaseOrderDetails = () => {
     const fetchData = async () => {
       const response = await getPurchaseOrderById(purchaseOrderId);
       setPurchaseOrder(response.purchaseOrder);
-      setQuotations(response.purchaseOrder.providerQuotation.quotations);
+      setQuotations(response.purchaseOrder.quotations);
       setInvoice(response.invoice);
       setDelivery(response.delivery);
       setAduana(response.aduana);

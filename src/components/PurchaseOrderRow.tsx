@@ -25,7 +25,7 @@ export const PurchaseOrderRow = ({ purchaseOrder }: PurchaseOrderRowProps) => {
       className="grid grid-cols-[20%_1fr_1fr] md:grid-cols-5 gap-4 border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
     >
       <p className="flex items-center">{purchaseOrder.code}</p>
-      <p className="flex items-center truncate">{purchaseOrder.providerQuotation.provider.name}</p>
+      <p className="flex items-center truncate">{purchaseOrder.provider.name}</p>
       <p className="hidden md:flex items-center">
         {formatDate(purchaseOrder.createdAt)}
       </p>
@@ -35,7 +35,7 @@ export const PurchaseOrderRow = ({ purchaseOrder }: PurchaseOrderRowProps) => {
         {purchaseOrder.state}
       </p>
       <p className="hidden md:flex items-center">
-        {purchaseOrder.providerQuotation.quotationType}
+        {purchaseOrder.quotationType}
       </p>
     </div>
   );

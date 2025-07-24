@@ -66,7 +66,7 @@ export const ProviderRow = ({
       >
         <p>{provider.name}</p>
         <p className="truncate">{provider.email || "-"}</p>
-        <p>{provider.phone || "-"}</p>
+        <p className="hidden md:block">{provider.phone || "-"}</p>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

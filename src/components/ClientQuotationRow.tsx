@@ -41,7 +41,9 @@ export const ClientQuotationRow = ({ quotation }: ClientQuotationRowProps) => {
         {formatDate(quotation.createdAt)}
       </p>
       <p
-        className={`px-2 md:px-4 py-1 rounded-full border-2 text-center w-fit ${getStateColor(quotation.state)}`}
+        className={`px-2 md:px-4 py-1 rounded-full border-2 text-center w-fit ${getStateColor(
+          quotation.state
+        )}`}
       >
         {quotation.state}
       </p>

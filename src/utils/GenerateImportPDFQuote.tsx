@@ -22,6 +22,7 @@ export const generateQuotationPDF = async (
       exchangeRate,
       currency,
       subtotal,
+      subtotalParts,
       markupPercentage,
       iva,
       freightCost,
@@ -114,7 +115,7 @@ export const generateQuotationPDF = async (
           table: {
             widths: ["*", "auto"],
             body: [
-              ["Subtotal partes", `${currency} ${subtotal?.toFixed(2)}`],
+              ["Subtotal partes", `${currency} ${subtotalParts?.toFixed(2)}`],
               ["Flete", `${currency} ${freightCost?.toFixed(2)}`],
               ["Seguro", `${currency} ${insuranceCost?.toFixed(2)}`],
               ["Transporte local", `${currency} ${localTransportCost?.toFixed(2)}`],

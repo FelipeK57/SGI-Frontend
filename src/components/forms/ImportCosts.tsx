@@ -50,7 +50,6 @@ export const ImportCosts = ({ clientQuotation, reload, setReload }: ImportCostsP
     try {
       setIsLoading(true);
       const data = Object.fromEntries(new FormData(e.currentTarget));
-      console.log("Form Data:", data);
       const response = await getCalculateImportTotalPrice(
         clientQuotation.id as number,
         data
@@ -117,6 +116,7 @@ export const ImportCosts = ({ clientQuotation, reload, setReload }: ImportCostsP
                       labelPlacement="outside"
                       placeholder="Selecciona un incoterm"
                       isRequired
+                      disallowEmptySelection
                     >
                       {incotermOptions.map((option) => (
                         <SelectItem key={option.key}>{option.label}</SelectItem>
@@ -142,6 +142,7 @@ export const ImportCosts = ({ clientQuotation, reload, setReload }: ImportCostsP
                       labelPlacement="outside"
                       placeholder="Selecciona una moneda"
                       isRequired
+                      disallowEmptySelection
                     >
                       {currencyOptions.map((option) => (
                         <SelectItem key={option.key}>{option.key}</SelectItem>

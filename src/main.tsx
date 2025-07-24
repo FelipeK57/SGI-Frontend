@@ -19,7 +19,7 @@ import { ReloadProvider } from "./context/ClientProviderContext.tsx";
 import { NewClientQuotation } from "./pages/client_quotation/NewClientQuotation.tsx";
 import { ClientQuotationDetails } from "./pages/client_quotation/ClientQuotationDetails.tsx";
 import { ProviderQuotations } from "./pages/provider_quotation/ProviderQuotations.tsx";
-import { NewProviderQuotation } from "./pages/provider_quotation/NewProviderQuotation.tsx";
+import { NewPurchaseOrder } from "./pages/purchase_orders/NewPurchaseOrder.tsx";
 import { ProviderQuotationDetails } from "./pages/provider_quotation/ProviderQuotationDetails.tsx";
 import { PurchaseOrders } from "./pages/purchase_orders/PurchaseOrders.tsx";
 import { PurchaseOrderDetails } from "./pages/purchase_orders/PurchaseOrderDetails.tsx";
@@ -47,15 +47,16 @@ createRoot(document.getElementById("root")!).render(
             element={<ClientQuotationDetails />}
           />
           <Route path="provider-quotes" element={<ProviderQuotations />} />
-          <Route
+          {/* <Route
             path="provider-quotes/new"
             element={<NewProviderQuotation />}
-          />
+          /> */}
           <Route
             path="provider-quotes/:quotationId"
             element={<ProviderQuotationDetails />}
           />
           <Route path="purchase-orders" element={<PurchaseOrders />} />
+          <Route path="purchase-orders/new" element={<NewPurchaseOrder />} />
           <Route
             path="purchase-orders/:purchaseOrderId"
             element={<PurchaseOrderDetails />}

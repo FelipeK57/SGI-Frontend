@@ -20,6 +20,7 @@ export const generateLocalQuotationPDF = async (
       offerValidity,
       currency,
       subtotal,
+      subtotalParts,
       markupPercentage,
       iva,
       localTransportCost,
@@ -104,7 +105,7 @@ export const generateLocalQuotationPDF = async (
           table: {
             widths: ["*", "auto"],
             body: [
-              ["Subtotal partes", `${currency} ${subtotal?.toFixed(2)}`],
+              ["Subtotal partes", `${currency} ${subtotalParts?.toFixed(2)}`],
               [
                 "Transporte local",
                 `${currency} ${localTransportCost?.toFixed(2)}`,

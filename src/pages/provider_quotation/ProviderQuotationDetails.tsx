@@ -4,7 +4,7 @@ import { generatePurchaseOrder, getProviderQuotationById, updateProviderQuotatio
 import type { ClientQuotation, ProviderQuotation } from "../../Clases";
 import { addToast, Button, Input, Radio, RadioGroup, Select, type Selection, SelectItem } from "@heroui/react";
 import { SearchIcon } from "../part/Parts";
-import type { QuotationAdded } from "./NewProviderQuotation";
+import type { QuotationAdded } from "../purchase_orders/NewPurchaseOrder";
 import { getClientQuotationByCode } from "../../services/clientQuotationService";
 import { ClientQuotationFound } from "../../components/ClientQuotationFound";
 import { states } from "../client_quotation/ClientQuotationDetails";

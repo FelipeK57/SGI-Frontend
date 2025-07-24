@@ -7,18 +7,22 @@ import type { ProviderQuotation } from "../../Clases";
 import { ProviderQuotationRow } from "../../components/ProviderQuotationRow";
 
 export const ProviderQuotations = () => {
-  const [providerQuotations, setProviderQuotations] = useState<ProviderQuotation[]>([]);
-  const [providerQuotationsFiltered, setProviderQuotationsFiltered] = useState<ProviderQuotation[]>([]);
+  const [providerQuotations, setProviderQuotations] = useState<
+    ProviderQuotation[]
+  >([]);
+  const [providerQuotationsFiltered, setProviderQuotationsFiltered] = useState<
+    ProviderQuotation[]
+  >([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getProviderQuotations()
+      const response = await getProviderQuotations();
       setProviderQuotations(response.quotations);
-    }
+    };
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (search === "") {
@@ -31,7 +35,7 @@ export const ProviderQuotations = () => {
               .toLowerCase()
               .includes(search.toLowerCase()) ||
             quotation.code.toLowerCase().includes(search.toLowerCase()) ||
-            quotation.state.toLowerCase().includes(search.toLowerCase()) || quotation.quotationType.toLowerCase().includes(search.toLowerCase())
+            quotation.state.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
@@ -64,32 +68,31 @@ export const ProviderQuotations = () => {
         />
       </div>
       <div className="flex flex-col overflow-y-auto h-full">
-        {
-          providerQuotationsFiltered.length > 0 ? (
-            <>
-              <div className="grid grid-cols-[30%_1fr_1fr] md:grid-cols-5 gap-4 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
-                <p>Código</p>
-                <p>Proveedor</p>
-                <p className="hidden md:block">Fecha</p>
-                <p>Estado</p>
-                <p className="hidden md:block">Tipo de compra</p>
-              </div>
-              <div className="flex flex-col">
-                {
-                  providerQuotationsFiltered.map((quotation) => (
-                    <ProviderQuotationRow key={quotation.id} quotation={quotation} />
-                  ))
-                }
-              </div>
-            </>
-          ) : (
-            <div className="col-span-full flex items-center justify-center">
-              <p className="text-zinc-500 text-sm font-light">
-                No hay cotizaciones disponibles
-              </p>
+        {providerQuotationsFiltered.length > 0 ? (
+          <>
+            <div className="grid grid-cols-[30%_1fr_1fr] md:grid-cols-5 gap-4 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+              <p>Código</p>
+              <p>Proveedor</p>
+              <p className="hidden md:block">Fecha</p>
+              <p>Estado</p>
+              <p className="hidden md:block">Tipo de compra</p>
             </div>
-          )
-        }
+            <div className="flex flex-col">
+              {providerQuotationsFiltered.map((quotation) => (
+                <ProviderQuotationRow
+                  key={quotation.id}
+                  quotation={quotation}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="col-span-full flex items-center justify-center">
+            <p className="text-zinc-500 text-sm font-light">
+              No hay cotizaciones disponibles
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
