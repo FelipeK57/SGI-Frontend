@@ -13,7 +13,7 @@ export const createDelivery = async (delivery: Delivery) => {
       deliveryDate: delivery.deliveryDate,
       estimatedDeliveryDate: delivery.estimatedDeliveryDate,
       cost: delivery.cost,
-      quotationType: delivery.purchaseOrder.providerQuotation.quotationType,
+      quotationType: delivery.purchaseOrder.quotationType,
     });
     return response;
   } catch (error) {

@@ -119,30 +119,36 @@ export const PurchaseInvoiceForm = ({
           isRequired
         />
         <div className="grid grid-cols-3 w-full items-start gap-2">
-          <Select
-            defaultSelectedKeys={[(invoice?.currency as string) || "usd"]}
-            name="currency"
-            isRequired
-            label="Moneda"
-            disallowEmptySelection
-            variant="bordered"
-            labelPlacement="outside"
-            placeholder="Monedas"
-            onSelectionChange={(keys) => {
-              if (invoice) {
-                setInvoice({
-                  ...invoice,
-                  currency: Array.from(keys)[0] as string,
-                } as PurchaseInvoice);
-              }
-            }}
-          >
-            <SelectItem key={"usd"}>USD</SelectItem>
-            <SelectItem key={"eur"}>EUR</SelectItem>
-            <SelectItem key={"cop"}>COP</SelectItem>
-          </Select>
+          {purchaseOrder.quotationType === "Importación" && (
+            <Select
+              defaultSelectedKeys={[(invoice?.currency as string) || "usd"]}
+              name="currency"
+              isRequired
+              label="Moneda"
+              disallowEmptySelection
+              variant="bordered"
+              labelPlacement="outside"
+              placeholder="Monedas"
+              onSelectionChange={(keys) => {
+                if (invoice) {
+                  setInvoice({
+                    ...invoice,
+                    currency: Array.from(keys)[0] as string,
+                  } as PurchaseInvoice);
+                }
+              }}
+            >
+              <SelectItem key={"usd"}>USD</SelectItem>
+              <SelectItem key={"eur"}>EUR</SelectItem>
+              <SelectItem key={"cop"}>COP</SelectItem>
+            </Select>
+          )}
           <NumberInput
-            className="col-span-2"
+            className={`${
+              purchaseOrder.quotationType === "Importación"
+                ? "col-span-2"
+                : "col-span-3"
+            }`}
             startContent={<p className="text-zinc-400">$</p>}
             label="Monto total"
             value={invoice?.amount}
@@ -161,8 +167,7 @@ export const PurchaseInvoiceForm = ({
             isRequired
           />
         </div>
-        {
-          purchaseOrder.providerQuotation &&
+        {purchaseOrder.quotationType === "Importación" && (
           <RadioGroup
             label="¿El envió está incluido?"
             name="shippingIncluded"
@@ -186,7 +191,7 @@ export const PurchaseInvoiceForm = ({
             <Radio value={"yes"}>Si</Radio>
             <Radio value={"no"}>No</Radio>
           </RadioGroup>
-        }
+        )}
         {(deliveryIncluded || invoice?.deliveryIncluded) && (
           <NumberInput
             startContent={<p className="text-zinc-400">$</p>}

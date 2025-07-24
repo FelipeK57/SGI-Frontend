@@ -209,15 +209,17 @@ export interface UnitsPendingIntake {
     client: Client;
     quotations: {
       id?: number;
-      providerQuotation: {
+      purchaseOrder: {
         id?: number;
-        purchaseOrder: {
-          id?: number;
-          code: string;
-          date: string;
-          state: "Pend. Ingreso";
-        };
+        code: string;
+        date: string;
+        state: "Pend. Ingreso";
       };
     };
+  };
+  purchaseOrder?: {
+    id?: number;
+    code: string;
+    date: string;
   };
 }

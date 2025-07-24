@@ -33,7 +33,7 @@ export const ClientQuotationRow = ({ quotation }: ClientQuotationRowProps) => {
   return (
     <div
       onClick={() => navigate(`${quotation.id}`)}
-      className="grid grid-cols-[20%_1fr_1fr] md:grid-cols-4 gap-4 border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
+      className="grid grid-cols-[20%_1fr_1fr] sm:grid-cols-4 md:grid-cols-5 gap-4 border-b-1 p-2 text-xs border-zinc-200 cursor-pointer hover:bg-zinc-100 hover:font-semibold transition-all"
     >
       <p className="flex items-center">{quotation.code}</p>
       <p className="flex items-center truncate">{quotation.client.name}</p>
@@ -46,6 +46,9 @@ export const ClientQuotationRow = ({ quotation }: ClientQuotationRowProps) => {
         )}`}
       >
         {quotation.state}
+      </p>
+      <p className="hidden sm:flex items-center">
+        {quotation.isInternational ? "Importación" : "Local"}
       </p>
     </div>
   );

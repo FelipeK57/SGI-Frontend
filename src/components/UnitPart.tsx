@@ -20,7 +20,7 @@ export const UnitPartRow = ({ unit }: UnitPartProps) => {
       <p>{unit.serial || "-"}</p>
       <p className="hidden md:block">{formatDate() || "-"}</p>
       <p>{unit.intake?.purchaseOrder.code || "-"}</p>
-      <p>{unit.intake?.quotationPart.clientQuotation.code || "-"}</p>
+      <p>{unit.intake?.quotationPart.clientQuotation?.code || "-"}</p>
     </div>
   )
 }

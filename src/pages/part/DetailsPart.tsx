@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import type { Part, OutputPart, UnitPart, UnitsPendingIntake } from "../../Clases";
-import { fetchPart, getUnitsPart, getUnitsPartPendingIntake, outputsParts } from "../../services/partService";
+import type {
+  Part,
+  OutputPart,
+  UnitPart,
+  UnitsPendingIntake,
+} from "../../Clases";
+import {
+  fetchPart,
+  getUnitsPart,
+  getUnitsPartPendingIntake,
+  outputsParts,
+} from "../../services/partService";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { useAuth } from "../../store/useAuth";
 import { RecentOutputPart } from "../../components/RecentOutputPart";
@@ -12,7 +22,9 @@ export const DetailsPart = () => {
   const [part, setPart] = useState<Part | null>(null);
   const [units, setUnits] = useState<UnitPart[]>([]);
   const [outputs, setOutputs] = useState<OutputPart[] | []>([]);
-  const [unitsPendingIntake, setUnitsPendingIntake] = useState<UnitsPendingIntake[] | []>([]);
+  const [unitsPendingIntake, setUnitsPendingIntake] = useState<
+    UnitsPendingIntake[] | []
+  >([]);
   const navigate = useNavigate();
   const partId = useLocation().pathname.split("/").pop();
   const { role } = useAuth();
@@ -29,14 +41,14 @@ export const DetailsPart = () => {
     };
 
     const fetchUnitsPartData = async () => {
-      const partData = await getUnitsPart(partId as string)
+      const partData = await getUnitsPart(partId as string);
       setUnits(partData.unitParts);
-    }
+    };
 
     const fetchUnitsPartPendingIntake = async () => {
       const partData = await getUnitsPartPendingIntake(partId as string);
       setUnitsPendingIntake(partData.units);
-    }
+    };
 
     fetchUnitsPartPendingIntake();
     fetchUnitsPartData();
@@ -232,7 +244,10 @@ export const IntakePending = ({ unitsPendingIntake }: IntakePendingProps) => {
       </div>
       <div>
         {unitsPendingIntake.map((unitPendingIntake) => (
-          <UnitPendingIntake unitPendingIntake={unitPendingIntake} key={unitPendingIntake.id} />
+          <UnitPendingIntake
+            unitPendingIntake={unitPendingIntake}
+            key={unitPendingIntake.id}
+          />
         ))}
       </div>
     </div>

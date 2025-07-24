@@ -49,6 +49,7 @@ export const NewOutputForm = () => {
   const [partNumber, setPartNumber] = useState<string>("");
   const [saleValue, setSaleValue] = useState<number>(0);
   const [serial, setSerial] = useState<string>("");
+  const [isStock, setIsStock] = useState<boolean>(false);
 
   const [errors, setErrors] = useState<Errors>({
     client: "",
@@ -112,8 +113,10 @@ export const NewOutputForm = () => {
       return;
     }
     setSaleValue(
-      outputType === "sale" ? part.intake?.quotationPart.unitPrice || 0 : saleValue
-    )
+      outputType === "sale"
+        ? part.intake?.quotationPart.unitPrice || 0
+        : saleValue
+    );
     setUnitPartsAdded([
       ...unitPartsAdded,
       {
@@ -177,6 +180,7 @@ export const NewOutputForm = () => {
       outputType
     );
     setUnitPartsFound(response.unitParts);
+    setIsStock(response.isStock || false);
   };
 
   const handleSearchPartBySerial = async () => {
@@ -234,7 +238,6 @@ export const NewOutputForm = () => {
     }
   };
 
-  console.log(unitPartWarranty);
   return (
     <>
       <Button
@@ -297,24 +300,7 @@ export const NewOutputForm = () => {
             <AutocompleteItem key={client.id}>{client.name}</AutocompleteItem>
           )}
         </Autocomplete>
-        {outputType === "sale" ? (
-          // <NumberInput
-          //   value={saleValue}
-          //   onValueChange={(value) => {
-          //     setSaleValue(value);
-          //   }}
-          //   label="Confirmar valor de venta"
-          //   labelPlacement="outside"
-          //   variant="bordered"
-          //   startContent={<p className="text-zinc-400">$</p>}
-          //   placeholder="Ingrese el valor de venta"
-          //   minValue={0}
-          //   step={1000}
-          //   isRequired
-          //   description="Este valor debe ser igual al valor total de la cotización del cliente."
-          // />
-          <p>Total: ${}</p>
-        ) : outputType === "loan" ? (
+        {outputType === "loan" && (
           <DatePicker
             name="returnDate"
             label="Fecha de devolución"
@@ -322,7 +308,24 @@ export const NewOutputForm = () => {
             variant="bordered"
             isRequired
           />
-        ) : null}
+        )}
+        {
+          outputType === "sale" &&  isStock && (
+            <NumberInput
+              value={saleValue}
+              onValueChange={(value) => {
+                setSaleValue(value);
+              }}
+              label="Valor de venta"
+              labelPlacement="outside"
+              variant="bordered"
+              startContent={<p className="text-zinc-400">$</p>}
+              placeholder="Ingrese el valor de venta"
+              minValue={0}
+              isRequired
+            />
+          )
+        }
         <Input
           value={
             outputType === "sale" || outputType === "loan"

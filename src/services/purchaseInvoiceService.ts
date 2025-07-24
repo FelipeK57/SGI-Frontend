@@ -11,7 +11,7 @@ export const createPurchaseInvoice = async (purchaseInvoice: PurchaseInvoice) =>
       date: purchaseInvoice.date,
       amount: purchaseInvoice.amount,
       deliveryIncluded: purchaseInvoice.deliveryIncluded,
-      quotationType: purchaseInvoice.purchaseOrder.providerQuotation.quotationType,
+      quotationType: purchaseInvoice.purchaseOrder.quotationType,
       currency: purchaseInvoice.currency,
       deliveryAmount: purchaseInvoice.deliveryAmount,
     });

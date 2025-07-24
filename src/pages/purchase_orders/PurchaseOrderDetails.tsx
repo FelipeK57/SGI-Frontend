@@ -1,12 +1,16 @@
-import {
-  Button,
-  Tab,
-  Tabs
-} from "@heroui/react";
+import { Button, Tab, Tabs } from "@heroui/react";
 import { useNavigate } from "react-router";
 import { ArrowLeftIcon } from "../part/DetailsPart";
 import { useEffect, useState } from "react";
-import type { Aduana, Delivery, LocalShipping, PurchaseInvoice, PurchaseOrder, Quotation } from "../../Clases";
+import type {
+  Aduana,
+  Delivery,
+  LocalShipping,
+  PurchaseInvoice,
+  PurchaseOrder,
+  Quotation,
+  QuotationPart,
+} from "../../Clases";
 import { getPurchaseOrderById } from "../../services/purchaseOrderService";
 import { getStateColorPurchaseOrder } from "../../components/PurchaseOrderRow";
 import { DetailsPurchaseOrder } from "../../components/DetailsPurchaseOrder";
@@ -22,10 +26,13 @@ export const PurchaseOrderDetails = () => {
     null
   );
   const [quotations, setQuotations] = useState<Quotation[]>([]);
+  const [quotationParts, setQuotationParts] = useState<QuotationPart[]>([]);
   const [invoice, setInvoice] = useState<PurchaseInvoice | null>(null);
   const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [aduana, setAduana] = useState<Aduana | null>(null);
-  const [localShipping, setLocalShipping] = useState<LocalShipping | null>(null);
+  const [localShipping, setLocalShipping] = useState<LocalShipping | null>(
+    null
+  );
   const [reload, setReload] = useState(false);
   const [deliveryIncluded, setDeliveryIncluded] = useState<boolean>(false);
 
@@ -34,6 +41,7 @@ export const PurchaseOrderDetails = () => {
       const response = await getPurchaseOrderById(purchaseOrderId);
       setPurchaseOrder(response.purchaseOrder);
       setQuotations(response.purchaseOrder.quotations);
+      setQuotationParts(response.purchaseOrder.quotationParts);
       setInvoice(response.invoice);
       setDelivery(response.delivery);
       setAduana(response.aduana);
@@ -92,6 +100,7 @@ export const PurchaseOrderDetails = () => {
             <DetailsPurchaseOrder
               purchaseOrder={purchaseOrder as PurchaseOrder}
               quotations={quotations}
+              quotationParts={quotationParts}
             />
           </Tab>
           <Tab key="invoice" title="Factura">
@@ -105,45 +114,39 @@ export const PurchaseOrderDetails = () => {
               setReload={setReload}
             />
           </Tab>
-          {
-            delivery && !invoice?.deliveryIncluded && (
-              <Tab key="exteriorDelivery" title="Envío Internacional">
-                <DeliveryForm
-                  purchaseOrder={purchaseOrder as PurchaseOrder}
-                  delivery={delivery as Delivery}
-                  setDelivery={setDelivery}
-                  reload={reload}
-                  setReload={setReload}
-                />
-              </Tab>
-            )
-          }
-          {
-            (aduana || purchaseOrder?.state === "Pend. Aduana") && (
-              <Tab key="customs" title="Aduana">
-                <AduanaForm
-                  purchaseOrder={purchaseOrder as PurchaseOrder}
-                  aduana={aduana as Aduana}
-                  setAduana={setAduana}
-                  reload={reload}
-                  setReload={setReload}
-                />
-              </Tab>
-            )
-          }
-          {
-            (localShipping || purchaseOrder?.state === "Pend. Entrega") && (
-              <Tab key="delivery" title="Entrega">
-                <LocalShippingForm
-                  purchaseOrder={purchaseOrder as PurchaseOrder}
-                  localShipping={localShipping as LocalShipping}
-                  setLocalShipping={setLocalShipping}
-                  reload={reload}
-                  setReload={setReload}
-                />
-              </Tab>
-            )
-          }
+          {(delivery || purchaseOrder?.state === "Pend. Envío") && (
+            <Tab key="exteriorDelivery" title="Envío Internacional">
+              <DeliveryForm
+                purchaseOrder={purchaseOrder as PurchaseOrder}
+                delivery={delivery as Delivery}
+                setDelivery={setDelivery}
+                reload={reload}
+                setReload={setReload}
+              />
+            </Tab>
+          )}
+          {(aduana || purchaseOrder?.state === "Pend. Aduana") && (
+            <Tab key="customs" title="Aduana">
+              <AduanaForm
+                purchaseOrder={purchaseOrder as PurchaseOrder}
+                aduana={aduana as Aduana}
+                setAduana={setAduana}
+                reload={reload}
+                setReload={setReload}
+              />
+            </Tab>
+          )}
+          {(localShipping || purchaseOrder?.state === "Pend. Entrega") && (
+            <Tab key="delivery" title="Entrega">
+              <LocalShippingForm
+                purchaseOrder={purchaseOrder as PurchaseOrder}
+                localShipping={localShipping as LocalShipping}
+                setLocalShipping={setLocalShipping}
+                reload={reload}
+                setReload={setReload}
+              />
+            </Tab>
+          )}
         </Tabs>
       </div>
     </main>
