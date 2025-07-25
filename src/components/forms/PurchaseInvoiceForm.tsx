@@ -1,6 +1,20 @@
-import { addToast, Input, DatePicker, Select, SelectItem, NumberInput, RadioGroup, Radio, Button,Form } from "@heroui/react";
+import {
+  addToast,
+  Input,
+  DatePicker,
+  Select,
+  SelectItem,
+  NumberInput,
+  RadioGroup,
+  Radio,
+  Button,
+  Form,
+} from "@heroui/react";
 import type { PurchaseOrder, PurchaseInvoice } from "../../Clases";
-import { updatePurchaseInvoice, createPurchaseInvoice } from "../../services/purchaseInvoiceService";
+import {
+  updatePurchaseInvoice,
+  createPurchaseInvoice,
+} from "../../services/purchaseInvoiceService";
 import { parseDate } from "@internationalized/date";
 
 interface PurchaseInvoiceProps {
@@ -13,9 +27,18 @@ interface PurchaseInvoiceProps {
   setReload: (reload: boolean) => void;
 }
 
-export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, deliveryIncluded, setDeliveryIncluded, reload, setReload }: PurchaseInvoiceProps) => {
-
-  const purchaseInvoiceHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+export const PurchaseInvoiceForm = ({
+  purchaseOrder,
+  invoice,
+  setInvoice,
+  deliveryIncluded,
+  setDeliveryIncluded,
+  reload,
+  setReload,
+}: PurchaseInvoiceProps) => {
+  const purchaseInvoiceHandleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
     if (invoice) {
       const response = await updatePurchaseInvoice(invoice);
@@ -57,9 +80,7 @@ export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, delive
 
   return (
     <div className="flex flex-col gap-2 h-full items-center overflow-y-auto">
-      <h2 className="font-semibold">
-        Registro de la factura del proveedor
-      </h2>
+      <h2 className="font-semibold">Registro de la factura del proveedor</h2>
       <Form
         onSubmit={purchaseInvoiceHandleSubmit}
         className="flex flex-col gap-4 w-full max-w-sm"
@@ -82,9 +103,7 @@ export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, delive
         />
         <DatePicker
           value={
-            invoice?.date
-              ? parseDate(invoice.date.split("T")[0])
-              : undefined
+            invoice?.date ? parseDate(invoice.date.split("T")[0]) : undefined
           }
           name="invoiceDate"
           onChange={(date) =>
@@ -100,22 +119,36 @@ export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, delive
           isRequired
         />
         <div className="grid grid-cols-3 w-full items-start gap-2">
-          <Select defaultSelectedKeys={[invoice?.currency as string || "usd"]} name="currency" isRequired label="Moneda" disallowEmptySelection variant="bordered" labelPlacement="outside" placeholder="Monedas"
-            onSelectionChange={(keys) => {
-              if (invoice) {
-                setInvoice({
-                  ...invoice,
-                  currency: Array.from(keys)[0] as string,
-                } as PurchaseInvoice);
-              }
-            }}
-          >
-            <SelectItem key={"usd"}>USD</SelectItem>
-            <SelectItem key={"eur"}>EUR</SelectItem>
-            <SelectItem key={"cop"}>COP</SelectItem>
-          </Select>
+          {purchaseOrder.quotationType === "Importación" && (
+            <Select
+              defaultSelectedKeys={[(invoice?.currency as string) || "usd"]}
+              name="currency"
+              isRequired
+              label="Moneda"
+              disallowEmptySelection
+              variant="bordered"
+              labelPlacement="outside"
+              placeholder="Monedas"
+              onSelectionChange={(keys) => {
+                if (invoice) {
+                  setInvoice({
+                    ...invoice,
+                    currency: Array.from(keys)[0] as string,
+                  } as PurchaseInvoice);
+                }
+              }}
+            >
+              <SelectItem key={"usd"}>USD</SelectItem>
+              <SelectItem key={"eur"}>EUR</SelectItem>
+              <SelectItem key={"cop"}>COP</SelectItem>
+            </Select>
+          )}
           <NumberInput
-            className="col-span-2"
+            className={`${
+              purchaseOrder.quotationType === "Importación"
+                ? "col-span-2"
+                : "col-span-3"
+            }`}
             startContent={<p className="text-zinc-400">$</p>}
             label="Monto total"
             value={invoice?.amount}
@@ -123,68 +156,73 @@ export const PurchaseInvoiceForm = ({ purchaseOrder, invoice, setInvoice, delive
               invoice &&
               setInvoice({
                 ...invoice,
-                amount: value as number
+                amount: value as number,
               } as PurchaseInvoice)
             }
             name="totalAmount"
             minValue={0}
-            step={100}
             placeholder="Ingresa el monto total"
             labelPlacement="outside"
             variant="bordered"
             isRequired
           />
         </div>
-        <RadioGroup
-          label="¿El envió está incluido?"
-          name="shippingIncluded"
-          defaultValue={
-            invoice?.deliveryIncluded === true ? "yes" : "no"
-          }
-          className="flex flex-col gap-2"
-          orientation="horizontal"
-          onChange={(e) => {
-            setDeliveryIncluded && setDeliveryIncluded(e.target.value === "yes");
-            invoice &&
-              setInvoice({
-                ...invoice,
-                deliveryIncluded: e.target.value === "yes",
-              } as PurchaseInvoice);
-          }}
-          isRequired
-          classNames={{
-            label: "text-zinc-950",
-          }}
-        >
-          <Radio value={"yes"}>Si</Radio>
-          <Radio value={"no"}>No</Radio>
-        </RadioGroup>
-        {
-          (deliveryIncluded || invoice?.deliveryIncluded) && (
-            <NumberInput
-              startContent={<p className="text-zinc-400">$</p>}
-              label="Monto del envió"
-              value={invoice?.deliveryAmount}
-              onValueChange={(value) =>
-                invoice &&
+        {purchaseOrder.quotationType === "Importación" && (
+          <RadioGroup
+            label="¿El envió está incluido?"
+            name="shippingIncluded"
+            defaultValue={invoice?.deliveryIncluded === true ? "yes" : "no"}
+            className="flex flex-col gap-2"
+            orientation="horizontal"
+            onChange={(e) => {
+              setDeliveryIncluded &&
+                setDeliveryIncluded(e.target.value === "yes");
+              invoice &&
                 setInvoice({
                   ...invoice,
-                  deliveryAmount: value as number,
-                } as PurchaseInvoice)
-              }
-              name="deliveryAmount"
-              minValue={0}
-              step={10}
-              placeholder="Ingresa el monto del envió"
-              labelPlacement="outside"
-              variant="bordered"
-            />
-          )
-        }
-        <Button isDisabled={purchaseOrder?.state !== "Pend. Envío" && purchaseOrder?.state !== "Pend. Factura"} type="submit" color="primary" className="w-full">
+                  deliveryIncluded: e.target.value === "yes",
+                } as PurchaseInvoice);
+            }}
+            isRequired
+            classNames={{
+              label: "text-zinc-950",
+            }}
+          >
+            <Radio value={"yes"}>Si</Radio>
+            <Radio value={"no"}>No</Radio>
+          </RadioGroup>
+        )}
+        {(deliveryIncluded || invoice?.deliveryIncluded) && (
+          <NumberInput
+            startContent={<p className="text-zinc-400">$</p>}
+            label="Monto del envió"
+            value={invoice?.deliveryAmount}
+            onValueChange={(value) =>
+              invoice &&
+              setInvoice({
+                ...invoice,
+                deliveryAmount: value as number,
+              } as PurchaseInvoice)
+            }
+            name="deliveryAmount"
+            minValue={0}
+            placeholder="Ingresa el monto del envió"
+            labelPlacement="outside"
+            variant="bordered"
+          />
+        )}
+        <Button
+          isDisabled={
+            purchaseOrder?.state !== "Pend. Envío" &&
+            purchaseOrder?.state !== "Pend. Factura"
+          }
+          type="submit"
+          color="primary"
+          className="w-full"
+        >
           {invoice ? "Actualizar factura" : "Crear factura"}
         </Button>
       </Form>
     </div>
-  )
-}
+  );
+};

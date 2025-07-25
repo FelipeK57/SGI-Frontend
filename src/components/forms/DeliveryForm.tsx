@@ -147,7 +147,6 @@ export const DeliveryForm = ({ purchaseOrder, delivery, setDelivery, reload, set
           name="cost"
           value={delivery?.cost}
           minValue={0}
-          step={10}
           placeholder="Ingresa el costo del envío"
           labelPlacement="outside"
           variant="bordered"

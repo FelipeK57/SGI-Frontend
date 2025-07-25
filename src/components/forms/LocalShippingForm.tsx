@@ -176,7 +176,6 @@ export const LocalShippingForm = ({
           variant="bordered"
           isRequired
           minValue={0}
-          step={1000}
         />
         <Input
           label="Número de factura del transportista local"

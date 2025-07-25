@@ -47,8 +47,13 @@ export const Parts = () => {
             </Button>
           </div>
         )}
+        {(role === "admin" || role === "auxiliary") && (
+          <div className="hidden sm:block">
+            <Button onPress={() => navigate("new")} color="primary">Registrar nueva parte</Button>
+          </div>
+        )}
       </div>
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex items-center gap-2">
         <Input
           onChange={(e) => {
             setSearchedPart(e.target.value);
@@ -59,11 +64,6 @@ export const Parts = () => {
           placeholder="Buscar"
           variant="bordered"
         />
-        {(role === "admin" || role === "auxiliary") && (
-          <div className="hidden sm:block">
-            <Button onPress={() => navigate("new")} color="primary">Registrar nueva parte</Button>
-          </div>
-        )}
       </div>
       <main
         className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-5 overflow-y-auto w-full

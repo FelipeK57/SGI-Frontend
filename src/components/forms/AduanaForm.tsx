@@ -136,7 +136,6 @@ export const AduanaForm = ({ purchaseOrder, aduana, setAduana, reload, setReload
           }
           name="amount"
           minValue={0}
-          step={10}
           placeholder="Ingresa el monto total de impuestos"
           labelPlacement="outside"
           variant="bordered"

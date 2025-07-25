@@ -1,6 +1,6 @@
 import { ENDPOINT } from "../config/apiConfig";
 import axios from "axios";
-import type { QuotationAdded } from "../pages/provider_quotation/NewProviderQuotation";
+import type { QuotationAdded } from "../pages/purchase_orders/NewPurchaseOrder";
 import { addToast } from "@heroui/react";
 
 export const getProviderQuotations = async () => {

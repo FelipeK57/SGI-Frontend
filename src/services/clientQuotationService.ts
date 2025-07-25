@@ -2,6 +2,7 @@ import axios from "axios";
 import { ENDPOINT } from "../config/apiConfig";
 import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
 import { addToast } from "@heroui/react";
+// import type { ClientQuotation } from "../Clases";
 
 export const getClientQuotations = async () => {
   try {
@@ -15,12 +16,18 @@ export const getClientQuotations = async () => {
 
 export const createClientQuotation = async (
   clientId: number,
-  parts: PartAdded[]
+  parts: PartAdded[],
+  quotationType: string,
+  requesterName: string,
+  currency: string
 ) => {
   try {
     const response = await axios.post(`${ENDPOINT.CLIENT_QUOTATIONS}`, {
       clientId,
       parts,
+      quotationType,
+      requesterName,
+      currency,
     });
     return response;
   } catch (error) {
@@ -33,7 +40,6 @@ export const createClientQuotation = async (
           timeout: 3000,
         });
       }
-      throw error;
     }
   }
 };
@@ -100,7 +106,9 @@ export const deleteQuotationPart = async (quotationId: string) => {
 
 export const getQuotationParts = async (purchaseOrderId: string) => {
   try {
-    const response = await axios.get(`${ENDPOINT.QUOTATION_PART}/${purchaseOrderId}`);
+    const response = await axios.get(
+      `${ENDPOINT.QUOTATION_PART}/${purchaseOrderId}`
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -125,6 +133,76 @@ export const getClientQuotationByCode = async (quotationCode: string) => {
         });
       }
       throw error;
-    }  
+    }
+  }
+};
+
+export const getCalculateImportTotalPrice = async (
+  clientQuotationId: number,
+  data: any
+) => {
+  try {
+    const response = await axios.post(
+      `${ENDPOINT.CLIENT_QUOTATIONS}/import/${clientQuotationId}`,
+      {
+        incoterm: data.incoterm,
+        currency: data.currency,
+        exchangeRate: Number(data.exchangeRate),
+        offerValidity: Number(data.offerValidity),
+        markupPercentage: Number(data.markupPercentage),
+        iva: Number(data.iva),
+        freightCost: Number(data.freightCost),
+        insuranceCost: Number(data.insuranceCost),
+        localTransportCost: Number(data.localTransportCost),
+        customsDuties: Number(data.customsDuties),
+        customsHandlingCost: Number(data.customsHandlingCost),
+        estimatedDeliveryDate: data.estimatedDeliveryDate,
+      }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Problemas",
+          description: error.response.data.message,
+          color: "warning",
+          timeout: 3000,
+        });
+      }
+      throw error;
+    }
+  }
+};
+
+export const getCalculateLocalTotalPrice = async (
+  clientQuotationId: number,
+  data: any
+) => {
+  try {
+    console.log("Calculating local total price with data:", data);
+    const response = await axios.post(
+      `${ENDPOINT.CLIENT_QUOTATIONS}/local/${clientQuotationId}`,
+      {
+        offerValidity: data.offerValidity,
+        markupPercentage: data.markupPercentage,
+        iva: data.iva,
+        localTransportCost: data.localTransportCost,
+        estimatedDeliveryDate: data.estimatedDeliveryDate,
+      }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        addToast({
+          title: "Problemas",
+          description: error.response.data.message,
+          color: "warning",
+          timeout: 3000,
+        });
+      }
+      throw error;
+    }
   }
 };

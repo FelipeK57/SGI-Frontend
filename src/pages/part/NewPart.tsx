@@ -8,6 +8,7 @@ export const NewPart = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [lenghtDescription, setLengthDescription] = useState(0);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -63,12 +64,16 @@ export const NewPart = () => {
           <Input isRequired name="name" label="Nombre" placeholder="Ingresa el nombre" labelPlacement="outside" variant="bordered" />
           <Input isRequired name="partNumber" label="Número de parte" placeholder="Ingresa el número de parte" labelPlacement="outside" variant="bordered" />
           <Input isRequired name="producer" label="Fabricante" placeholder="Ingresa el fabricante" labelPlacement="outside" variant="bordered" />
-          <Textarea isRequired maxLength={200} classNames={{
-            input: "min-h-14 max-h-14 sm:min-h-36 sm:max-h-36",
-          }} name="description" label="Descripción" placeholder="Ingresa la descripción" labelPlacement="outside" variant="bordered" />
+          <Textarea
+            onChange={(e) => {
+              setLengthDescription(e.target.value.length);
+            }}
+            isRequired maxLength={500} classNames={{
+              input: "min-h-14 max-h-14 sm:min-h-36 sm:max-h-36",
+            }} name="description" description={`${lenghtDescription}/500`} label="Descripción" placeholder="Ingresa la descripción" labelPlacement="outside" variant="bordered" />
           <div className="hidden md:block">
             <Button isLoading={isLoading} type="submit" color="primary" className="w-full">
-              Registrar parte
+              {isLoading ? "Registrando parte..." : "Registrar parte"}
             </Button>
           </div>
         </div>

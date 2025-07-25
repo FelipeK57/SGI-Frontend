@@ -28,7 +28,6 @@ export const Clients = () => {
       const filteredClients = clients.filter(
         (client) =>
           client.name.toLowerCase().includes(search.toLowerCase()) ||
-          client.company?.toLowerCase().includes(search.toLowerCase()) ||
           client.email?.toLowerCase().includes(search.toLowerCase()) ||
           client.phone?.toLowerCase().includes(search.toLowerCase())
       );
@@ -50,9 +49,8 @@ export const Clients = () => {
         <div className="flex flex-col w-full h-full">
           {clientsFiltered.length > 0 ? (
             <>
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+              <div className="grid grid-cols-3 md:grid-cols-3 gap-3 border-y-1 p-2 w-full text-sm font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
                 <p>Nombre</p>
-                <p>Empresa</p>
                 <p>Email</p>
                 <p className="hidden md:block">Teléfono</p>
               </div>

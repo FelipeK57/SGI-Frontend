@@ -1,4 +1,4 @@
-import { Button, Input } from "@heroui/react";
+import { Button, NumberInput } from "@heroui/react";
 import type { Part } from "../Clases";
 import { useState } from "react";
 import type { PartAdded } from "../pages/client_quotation/NewClientQuotation";
@@ -12,9 +12,19 @@ interface QuotePartProps {
   onRemovePart: (part: Part) => void;
   onQuantityChange: (part: Part, quantity: number) => void;
   onPriceUnitChange: (part: Part, priceUnit: number) => void;
+  notEditable?: boolean; // Optional prop to control editability
 }
 
-export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPartUnitPrice, onRemovePart, onQuantityChange, onPriceUnitChange }: QuotePartProps) => {
+export const QuotePart = ({
+  part,
+  partAdded,
+  quotationPartQuantity,
+  quotationPartUnitPrice,
+  onRemovePart,
+  onQuantityChange,
+  onPriceUnitChange,
+  notEditable,
+}: QuotePartProps) => {
   const [quantity, setQuantity] = useState(quotationPartQuantity || 1);
   const [priceUnit, setPriceUnit] = useState(quotationPartUnitPrice || 0);
 
@@ -29,13 +39,13 @@ export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPar
   const handleDeletePart = async () => {
     if (!partAdded?.id) {
       onRemovePart(part);
-      return
+      return;
     }
     const response = await deleteQuotationPart(partAdded.id);
     if (response && response.status === 200) {
       onRemovePart(part);
     }
-  }
+  };
 
   return (
     <div className="flex border-1 p-3 gap-4 rounded-md">
@@ -48,21 +58,23 @@ export const QuotePart = ({ part, partAdded, quotationPartQuantity, quotationPar
         <p className="font-semibold">{part.name}</p>
         <p className="text-xs text-zinc-500">{part.partNumber}</p>
         <p className="text-xs text-zinc-500">{part.producer}</p>
-        <Input
-          label="Precio unitario"
-          labelPlacement="outside"
-          placeholder="0"
-          variant="bordered"
-          type="number"
-          className="max-w-36"
-          startContent={<p className="text-zinc-400">$</p>}
-          value={priceUnit.toString()}
-          onChange={(e) => {
-            const value = Number(e.target.value);
-            setPriceUnit(value);
-            onPriceUnitChange(part, value);
-          }}
-        />
+        {!notEditable && (
+          <NumberInput
+            label="Precio unitario"
+            labelPlacement="outside"
+            placeholder="0"
+            variant="bordered"
+            type="number"
+            className="max-w-36"
+            minValue={0}
+            startContent={<p className="text-zinc-400">$</p>}
+            value={priceUnit}
+            onValueChange={(value: number) => {
+              setPriceUnit(value);
+              onPriceUnitChange(part, value);
+            }}
+          />
+        )}
       </div>
       <div className="flex flex-col gap-2 justify-between items-end">
         <Button

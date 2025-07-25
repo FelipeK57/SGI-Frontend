@@ -65,8 +65,8 @@ export const ProviderRow = ({
         key={provider.id}
       >
         <p>{provider.name}</p>
-        <p className="truncate">{provider.email}</p>
-        <p className="hidden md:block">{provider.phone}</p>
+        <p className="truncate">{provider.email || "-"}</p>
+        <p className="hidden md:block">{provider.phone || "-"}</p>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -94,11 +94,11 @@ export const ProviderRow = ({
                   label="Email"
                   labelPlacement="outside"
                   variant="bordered"
-                  isRequired
                   name="email"
                   placeholder="Ingrese el email del proveedor"
                 />
                 <Input
+                  type="tel"
                   value={providerData.phone}
                   onChange={(e) =>
                     setProviderData({ ...providerData, phone: e.target.value })
@@ -106,7 +106,6 @@ export const ProviderRow = ({
                   label="Teléfono"
                   labelPlacement="outside"
                   variant="bordered"
-                  isRequired
                   name="phone"
                   placeholder="Ingrese el teléfono del proveedor"
                 />

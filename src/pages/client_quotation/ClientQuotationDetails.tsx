@@ -19,6 +19,11 @@ import { QuotePart } from "../../components/QuotePart";
 import { SearchIcon } from "../part/Parts";
 import { getPartByNumber } from "../../services/partService";
 import { PartFound } from "../../components/PartFound";
+import { ImportCosts } from "../../components/forms/ImportCosts";
+import { ArrowLeftIcon } from "../part/DetailsPart";
+import { generateQuotationPDF } from "../../utils/GenerateImportPDFQuote";
+import { LocalCosts } from "../../components/forms/LocalCosts";
+import { generateLocalQuotationPDF } from "../../utils/GenerateLocalPDFQuote";
 
 export const states = [
   {
@@ -45,6 +50,10 @@ export const ClientQuotationDetails = () => {
   const [partsAdded, setPartsAdded] = useState<PartAdded[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [stateSelected, setStateSelected] = useState<Selection>(new Set());
+  const [reload, setReload] = useState(false);
+
+  // Error
+  const [errorPartsAdded, setErrorPartsAdded] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchQuotation = async () => {
@@ -55,19 +64,19 @@ export const ClientQuotationDetails = () => {
       setPartsAdded(
         response.quotation.quotationParts.map(
           (part: PartAdded) =>
-          ({
-            id: part.id,
-            partId: part.part.id,
-            part: part.part,
-            quantity: part.quantity,
-            unitPrice: Number(part.unitPrice),
-            totalPrice: Number(part.totalPrice),
-          } as PartAdded)
+            ({
+              id: part.id,
+              partId: part.part.id,
+              part: part.part,
+              quantity: part.quantity,
+              unitPrice: Number(part.unitPrice),
+              totalPrice: Number(part.totalPrice),
+            } as PartAdded)
         )
       );
     };
     fetchQuotation();
-  }, [quotationId]);
+  }, [reload, quotationId]);
 
   const handleSearchPart = async (partNumber: string) => {
     const data = await getPartByNumber(partNumber);
@@ -75,6 +84,9 @@ export const ClientQuotationDetails = () => {
   };
 
   const handleAddPart = (part: Part) => {
+    if (errorPartsAdded) {
+      setErrorPartsAdded(null);
+    }
     if (partsAdded.some((p) => p.partId === part.id)) {
       addToast({
         title: "Parte ya agregada",
@@ -97,10 +109,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.partId === part.id
           ? {
-            ...p,
-            quantity,
-            totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
-          }
+              ...p,
+              quantity,
+              totalPrice: p.unitPrice ? p.unitPrice * quantity : 0,
+            }
           : p
       )
     );
@@ -111,10 +123,10 @@ export const ClientQuotationDetails = () => {
       partsAdded.map((p) =>
         p.part.id === part.id
           ? {
-            ...p,
-            unitPrice: priceUnit,
-            totalPrice: p.quantity ? p.quantity * priceUnit : 0,
-          }
+              ...p,
+              unitPrice: priceUnit,
+              totalPrice: p.quantity ? p.quantity * priceUnit : 0,
+            }
           : p
       )
     );
@@ -126,6 +138,11 @@ export const ClientQuotationDetails = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    if (partsAdded.length === 0) {
+      setErrorPartsAdded("Agrega al menos una parte");
+      setIsLoading(false);
+      return;
+    }
     const response = await updateClientQuotation(
       quotationId,
       Array.from(stateSelected)[0] as string,
@@ -145,29 +162,61 @@ export const ClientQuotationDetails = () => {
 
   return (
     <main className="flex flex-col gap-3 w-full h-full overflow-hidden">
+      <div className="flex justify-between w-full">
+        <Button
+          onPress={() => navigate("/dashboard/client-quotes")}
+          isIconOnly
+          variant="light"
+          color="primary"
+        >
+          <ArrowLeftIcon />
+        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onPress={() => {
+              quotation?.isInternational
+                ? generateQuotationPDF(quotation as ClientQuotation, partsAdded)
+                : generateLocalQuotationPDF(
+                    quotation as ClientQuotation,
+                    partsAdded
+                  );
+            }}
+            color="default"
+            variant="bordered"
+          >
+            <ExportIcon />
+            Descargar PDF
+          </Button>
+          <div className="hidden md:flex gap-2">
+            {quotation?.isInternational ? (
+              <ImportCosts
+                clientQuotation={quotation as ClientQuotation}
+                reload={reload}
+                setReload={setReload}
+              />
+            ) : (
+              <LocalCosts
+                quotation={quotation as ClientQuotation}
+                reload={reload}
+                setReload={setReload}
+              />
+            )}
+            <Button
+              onPress={handleSubmit}
+              isLoading={isLoading}
+              variant="solid"
+              color="primary"
+              className="w-full px-8"
+            >
+              {isLoading ? "Guardando..." : "Guardar cambios"}
+            </Button>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">
           Detalles cotización: {quotation?.code}
         </h1>
-        <div className="hidden md:flex gap-2">
-          <Button
-            className="w-full"
-            onPress={() => navigate("/dashboard/client-quotes")}
-            variant="bordered"
-            color="default"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onPress={handleSubmit}
-            isLoading={isLoading}
-            variant="solid"
-            color="primary"
-            className="w-full px-8"
-          >
-            {isLoading ? "Guardando..." : "Guardar cambios"}
-          </Button>
-        </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4 h-full overflow-hidden">
         <section className="flex flex-col gap-4 h-fit">
@@ -194,12 +243,28 @@ export const ClientQuotationDetails = () => {
             </Select>
           </div>
           <Input
-            label="Cliente"
+            label="Tipo de compra"
             labelPlacement="outside"
             variant="bordered"
             isReadOnly
-            value={quotation?.client.name}
+            value={quotation?.isInternational ? "Importación" : "Local"}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="Cliente"
+              labelPlacement="outside"
+              variant="bordered"
+              isReadOnly
+              value={quotation?.client.name}
+            />
+            <Input
+              label="Solicitante"
+              labelPlacement="outside"
+              variant="bordered"
+              isReadOnly
+              value={quotation?.requesterName}
+            />
+          </div>
           <Input
             value={partNumber}
             onChange={(e) => setPartNumber(e.target.value)}
@@ -221,20 +286,6 @@ export const ClientQuotationDetails = () => {
                 Buscar
               </Button>
             }
-            description={
-              <>
-                <p>
-                  No encuentras la parte?, da clic en el texto subrayado{" "}
-                  <a
-                    className="text-blue-500 underline"
-                    href="http://localhost:5173/dashboard/parts/new"
-                    target="_blank"
-                  >
-                    Crear nueva parte
-                  </a>
-                </p>
-              </>
-            }
           />
           {partsFound.length > 0 && partNumber !== "" && (
             <div className="flex flex-col gap-2 overflow-y-auto">
@@ -249,17 +300,102 @@ export const ClientQuotationDetails = () => {
           )}
         </section>
         <section className="flex flex-col gap-4 h-full overflow-hidden">
+          <div className="flex flex-col gap-2">
+            <p className="font-semibold">Desglose de costos</p>
+            {partsAdded && partsAdded.length > 0 && (
+              <p className="text-sm">
+                Subtotal partes:{" "}
+                {partsAdded
+                  .reduce((acc, part) => acc + (part.totalPrice || 0), 0)
+                  .toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation?.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+              </p>
+            )}
+            {quotation &&
+            quotation.isInternational &&
+            quotation.cifTotal &&
+            quotation.subtotal &&
+            quotation.subtotalWithMarkup ? (
+              <>
+                <p className="text-sm">
+                  Total CIF:{" "}
+                  {quotation.cifTotal.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="text-sm">
+                  Subtotal con Ganancia:{" "}
+                  {quotation.subtotalWithMarkup.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="text-sm">
+                  IVA (19%):{" "}
+                  {quotation.ivaAmount?.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="text-sm">
+                  Total:{" "}
+                  {Number(quotation.totalPrice).toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}{" "}
+                  ~{" "}
+                  {quotation.totalPrice
+                    ? (
+                        quotation.totalPrice * (quotation.exchangeRate || 1)
+                      ).toLocaleString("es-CO", {
+                        style: "currency",
+                        currency: "COP",
+                        minimumFractionDigits: 0,
+                      })
+                    : "N/A"}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm">
+                  Subtotal:{" "}
+                  {quotation?.subtotal?.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation?.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="text-sm">
+                  IVA (19%):{" "}
+                  {quotation?.ivaAmount?.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation?.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="text-sm">
+                  Total:{" "}
+                  {Number(quotation?.totalPrice).toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: quotation?.currency || "USD",
+                    minimumFractionDigits: 0,
+                  })}{" "}
+                </p>
+              </>
+            )}
+          </div>
           <div className="flex flex-col gap-2 h-full overflow-hidden">
-            <p className="text-sm">Partes agregadas</p>
-            <p className="font-semibold">
-              Total: $
-              {partsAdded.reduce(
-                (acc, part) => acc + (part.totalPrice || 0),
-                0
-              )}
-            </p>
+            <p className="text-sm">Partes agregadas:</p>
             <div className="flex flex-col gap-2 h-full overflow-y-auto">
-              {partsAdded.length > 0 && (
+              {partsAdded.length > 0 ? (
                 <div className="flex flex-col gap-2">
                   {partsAdded.map((part) => (
                     <QuotePart
@@ -274,20 +410,35 @@ export const ClientQuotationDetails = () => {
                     />
                   ))}
                 </div>
+              ) : (
+                <div className="flex flex-col w-full items-center justify-center">
+                  {errorPartsAdded ? (
+                    <p className="text-danger text-xs">{errorPartsAdded}</p>
+                  ) : (
+                    <p className="text-zinc-500 text-xs">
+                      No hay partes agregadas
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </div>
         </section>
       </div>
       <div className="flex md:hidden w-full gap-2">
-        <Button
-          className="w-full"
-          onPress={() => navigate("/dashboard/client-quotes")}
-          variant="bordered"
-          color="default"
-        >
-          Cancelar
-        </Button>
+        {quotation?.isInternational ? (
+          <ImportCosts
+            clientQuotation={quotation as ClientQuotation}
+            reload={reload}
+            setReload={setReload}
+          />
+        ) : (
+          <LocalCosts
+            quotation={quotation as ClientQuotation}
+            reload={reload}
+            setReload={setReload}
+          />
+        )}
         <Button
           onPress={handleSubmit}
           isLoading={isLoading}
@@ -299,5 +450,24 @@ export const ClientQuotationDetails = () => {
         </Button>
       </div>
     </main>
+  );
+};
+
+const ExportIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="size-4 text-gray-800"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+      />
+    </svg>
   );
 };
