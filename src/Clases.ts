@@ -196,6 +196,8 @@ export interface NewOutput {
   returnDate?: string;
   saleValue?: number;
   parts: PartOutput[];
+  isStock?: boolean;
+  quoteCode?: string;
 }
 
 export interface UnitsPendingIntake {

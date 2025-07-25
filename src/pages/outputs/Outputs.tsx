@@ -204,28 +204,24 @@ export const OutputDetails = ({ output }: OutputDetailsProps) => {
                 ) : null}
                 {output.partOutputs && output.partOutputs.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <p className="text-sm mb-1">Partes {output.type === "sale" ? "vendidas" : "prestadas"}</p>
-                    <div className="grid grid-cols-2 gap-3 border-y-1 p-2 w-full text-xs font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
-                      <p>Parte</p>
-                      <p>Serial</p>
-                    </div>
-                    {output.partOutputs.map((part) => (
-                      <div
-                        key={part.serial}
-                        className="grid grid-cols-2 gap-3 p-2 text-xs border-b border-zinc-200"
-                      >
-                        <p>{part.part?.name}</p>
-                        <p>{part.serial}</p>
-                      </div>
-                    ))}
                     <p className="text-sm">
-                      Total:{" "}
-                      {Number(output.saleValue)?.toLocaleString("es-CO", {
-                        minimumFractionDigits: 0,
-                        style: "currency",
-                        currency: "COP",
-                      })}
+                      Partes {output.type === "sale" ? "vendidas" : output.type === "loan" ? "prestadas" : "devueltas"}:
                     </p>
+                    <div className="flex flex-col w-full">
+                      <div className="grid grid-cols-2  border-y-1 p-2 w-full text-xs font-semibold border-zinc-200 bg-zinc-100 sticky top-0 z-10">
+                        <p>Parte</p>
+                        <p>Serial</p>
+                      </div>
+                      {output.partOutputs.map((part) => (
+                        <div
+                          key={part.serial}
+                          className="grid grid-cols-2 p-2 text-xs border-b border-zinc-200"
+                        >
+                          <p>{part.part?.name}</p>
+                          <p>{part.serial}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </ModalBody>

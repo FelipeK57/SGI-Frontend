@@ -32,6 +32,7 @@ export interface UnitPartsAdded {
   part: Part;
   partId: number;
   serial: string;
+  quoteCode?: string;
 }
 
 interface Errors {
@@ -113,16 +114,33 @@ export const NewOutputForm = () => {
       return;
     }
     setSaleValue(
-      outputType === "sale"
+      outputType === "sale" && isStock
         ? part.intake?.quotationPart.unitPrice || 0
         : saleValue
     );
+    if (
+      unitPartsAdded.some(
+        (p) => p.quoteCode !== part.intake?.quotationPart.clientQuotation?.code
+      ) &&
+      !isStock
+    ) {
+      addToast({
+        title: "Advertencia",
+        description:
+          "La parte no se puede agregar porque pertenecen a cotizaciones diferentes.",
+        color: "warning",
+        timeout: 5000,
+      });
+      return;
+    }
+
     setUnitPartsAdded([
       ...unitPartsAdded,
       {
         part: part.part,
         partId: part.part.id,
         serial: part.serial,
+        quoteCode: part.intake?.quotationPart.clientQuotation?.code || "",
       },
     ]);
     setUnitPartsFound(
@@ -220,6 +238,8 @@ export const NewOutputForm = () => {
           new Date(data.returnDate as string).toISOString()) ||
         undefined,
       parts: unitPartsAdded,
+      isStock: isStock,
+      quoteCode: unitPartsAdded[0]?.quoteCode || "",
     };
     const response = await createOutput(outputData);
     if (response && response.status === 201) {
@@ -309,23 +329,21 @@ export const NewOutputForm = () => {
             isRequired
           />
         )}
-        {
-          outputType === "sale" &&  isStock && (
-            <NumberInput
-              value={saleValue}
-              onValueChange={(value) => {
-                setSaleValue(value);
-              }}
-              label="Valor de venta"
-              labelPlacement="outside"
-              variant="bordered"
-              startContent={<p className="text-zinc-400">$</p>}
-              placeholder="Ingrese el valor de venta"
-              minValue={0}
-              isRequired
-            />
-          )
-        }
+        {outputType === "sale" && isStock && (
+          <NumberInput
+            value={saleValue}
+            onValueChange={(value) => {
+              setSaleValue(value);
+            }}
+            label="Valor de venta"
+            labelPlacement="outside"
+            variant="bordered"
+            startContent={<p className="text-zinc-400">$</p>}
+            placeholder="Ingrese el valor de venta"
+            minValue={0}
+            isRequired
+          />
+        )}
         <Input
           value={
             outputType === "sale" || outputType === "loan"
@@ -392,7 +410,10 @@ export const NewOutputForm = () => {
                 />
                 <div className="flex flex-col gap-2 w-full">
                   <p className="font-semibold">{unitPart.part.name}</p>
-                  {/* <p className="text-sm text-zinc-700">{unitPart.part.partNumber}</p> */}
+                  <p className="text-sm text-zinc-700">
+                    {unitPart.intake?.quotationPart.clientQuotation?.code ||
+                      "Stock SEMCON"}
+                  </p>
                   <p className="text-xs text-zinc-500">
                     Serial: {unitPart.serial}
                   </p>
@@ -466,6 +487,10 @@ export const NewOutputForm = () => {
                 />
                 <div className="flex flex-col gap-2 w-full">
                   <p className="font-semibold">{unitPart.part.name}</p>
+                  <p className="text-sm text-zinc-700">
+                    {unitPart.quoteCode || "Stock SEMCON"}
+                  </p>
+
                   <p className="text-xs text-zinc-500">
                     Serial: {unitPart.serial}
                   </p>
